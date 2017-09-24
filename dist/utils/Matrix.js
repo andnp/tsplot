@@ -4,16 +4,32 @@ var Matrix = /** @class */ (function () {
     function Matrix(data) {
         this.data = [];
         this.transposed = false;
-        this.data = data;
+        this.load(data);
     }
     ;
+    Matrix.prototype.inBounds = function (a, b) {
+        var _a = this.dims(), rows = _a.rows, cols = _a.cols;
+        return a >= 0 &&
+            b >= 0 &&
+            a < rows &&
+            b < cols;
+    };
+    ;
+    Matrix.prototype.boundaryCheck = function (a, b) {
+        var _a = this.dims(), rows = _a.rows, cols = _a.cols;
+        if (!this.inBounds(a, b))
+            throw new Error("Out-of-bounds: (" + a + ", " + b + ") is out of bounds for (" + rows + ", " + cols + ") matrix");
+    };
+    ;
     Matrix.prototype.get = function (a, b) {
+        this.boundaryCheck(a, b);
         if (this.transposed)
             return this.data[b][a];
         return this.data[a][b];
     };
     ;
     Matrix.prototype.set = function (a, b, v) {
+        this.boundaryCheck(a, b);
         if (this.transposed)
             this.data[a][b] = v;
         else

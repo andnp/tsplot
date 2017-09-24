@@ -1,19 +1,35 @@
-type primitive = string | number;
-type Dim = {rows: number, cols: number};
+export type primitive = string | number;
+export type Dim = {rows: number, cols: number};
 class Matrix {
     private data: Array<Array<primitive>> = [];
     private transposed: boolean = false;
 
     constructor(data: Array<Array<primitive>>) {
-        this.data = data;
+        this.load(data);
+    };
+
+    inBounds(a: number, b: number) : boolean {
+        const { rows, cols } = this.dims();
+        return  a >= 0 &&
+                b >= 0 &&
+                a < rows &&
+                b < cols;
+    };
+
+    private boundaryCheck(a: number, b: number) : void {
+        const { rows, cols } = this.dims();
+        if (!this.inBounds(a, b))
+            throw new Error(`Out-of-bounds: (${a}, ${b}) is out of bounds for (${rows}, ${cols}) matrix`);
     };
 
     get(a: number, b: number) : primitive {
+        this.boundaryCheck(a, b);
         if (this.transposed) return this.data[b][a];
         return this.data[a][b];
     };
 
     set(a: number, b: number, v: primitive) : void {
+        this.boundaryCheck(a, b);
         if (this.transposed) this.data[a][b] = v;
         else this.data[b][a] = v;
     };
