@@ -1,8 +1,7 @@
 import test from 'ava';
 import * as _ from 'lodash';
-import * as Worker from '../../utils/Worker';
-
-Promise = require('bluebird');
+import * as Worker from 'utils/Worker';
+import * as Bluebird from 'bluebird';
 
 test("Can distribute simple function to many threads", async t => {
     const work = (i: number) => i + 1;
@@ -57,5 +56,5 @@ test('Worker pool can execute many functions', async t => {
             });
     });
 
-    await Promise.all(promises);
+    await Bluebird.all(promises);
 });

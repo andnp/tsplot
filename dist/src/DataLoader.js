@@ -1,27 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Bluebird = require("bluebird");
 const fs = require("fs");
 const Glob = require("glob");
 const Worker = require("./utils/Worker");
 const Matrix_1 = require("./utils/Matrix");
-Promise = require('bluebird');
-;
-;
 function loadFile(path) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path.location, (err, data) => {
+    return new Bluebird((resolve, reject) => {
+        fs.readFile(path, (err, data) => {
             if (err)
                 reject(err);
             else
                 resolve(data);
         });
-    })
-        .then((raw) => {
-        const buffer = { raw };
-        return Object.assign(path, buffer);
     });
 }
 exports.loadFile = loadFile;
+function loadJSON(path) {
+    return loadFile(path).then((buffer) => JSON.parse(buffer.toString()));
+}
+exports.loadJSON = loadJSON;
+;
 const parseCsvString = (str) => {
     const rows = str.split('\n');
     const mat = [];
@@ -40,7 +39,7 @@ const parseCsvString = (str) => {
 };
 const CSVParsePool = Worker.createPool(parseCsvString);
 function readCSV(buffer) {
-    const str = buffer.raw.toString();
+    const str = buffer.toString();
     return CSVParsePool.use(str)
         .then((data) => {
         return new Matrix_1.default(data);
@@ -48,20 +47,12 @@ function readCSV(buffer) {
 }
 exports.readCSV = readCSV;
 function readGlob(path) {
-    return new Promise((resolve, reject) => {
-        Glob(path.location, (err, files) => {
+    return new Bluebird((resolve, reject) => {
+        Glob(path, (err, files) => {
             if (err)
                 reject(err);
             else
                 resolve(files);
-        });
-    })
-        .then((files) => {
-        return files.map((file) => {
-            const path = {
-                location: file
-            };
-            return path;
         });
     });
 }

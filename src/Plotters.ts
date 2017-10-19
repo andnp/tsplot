@@ -1,12 +1,22 @@
 import * as LocalPlot from './plotters/LocalPlotter';
+import * as Bluebird from 'bluebird';
 import * as Plots from './LinePlots';
+import * as PlotlyCharts from './utils/PlotlyCharts';
+import * as _ from 'lodash';
 
-Promise = require('bluebird');
+export interface SaveOptions_t {
+    name: string,
+    path: string
+}
 
-export async function savePNG(charts: Array<Plots.Chart>) {
-    const promises = charts.map((chart: Plots.Chart) => {
-        return LocalPlot.plot(chart.trace, chart.layout, chart.name);
+export function savePNG(charts: Array<PlotlyCharts.Chart>, options?: Partial<SaveOptions_t>) {
+    const promises = charts.map((chart: PlotlyCharts.Chart) => {
+        const opts = _.mergeWith({
+            name: chart.name,
+            path: 'plots'
+        }, options);
+        return LocalPlot.plot(chart.trace, chart.layout, opts);
     });
 
-    await Promise.all(promises);
+    return Bluebird.all(promises);
 }

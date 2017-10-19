@@ -2,8 +2,7 @@
 // Warning ye who enter here.
 // There be black magic beyond these lines.
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = require('lodash');
-const Promise = require('bluebird');
+const Bluebird = require("bluebird");
 const createPhantomPool = require('phantom-pool');
 const URL2Image = require('image-data-uri');
 const plotly = require.resolve('plotly.js/dist/plotly.min.js');
@@ -14,9 +13,10 @@ const phantomPool = createPhantomPool({
     maxUses: 200,
     autostart: false
 });
-const plot = async (trace, layout, options) => {
+exports.plot = async (trace, layout, options) => {
     // The following function is stringified then sent (as a string) to a PhantomJS instance to be evaluated.
-    const url = await phantomPool.use(async (instance) => {
+    const url = await phantomPool.use(async function (instance) {
+        let Plotly = {};
         const page = await instance.createPage();
         await page.injectJs(d3);
         await page.injectJs(plotly);
@@ -26,17 +26,19 @@ const plot = async (trace, layout, options) => {
             if (data)
                 out.data_url = data;
         }, outObj);
-        await page.evaluate((trace, layout) => {
+        await page.evaluate(function (trace, layout) {
             const el = document.createElement('div');
             document.body.appendChild(el);
             const trace_arr = Array.isArray(trace) ? trace : [trace];
-            return window.Plotly.plot(el, trace_arr, layout, { showLink: false })
-                .then((gd) => window.Plotly.toImage(gd, { format: 'png', height: 800, width: 800 }))
-                .then((url) => {
+            return Plotly.plot(el, trace_arr, layout, { showLink: false })
+                .then(function (gd) {
+                return Plotly.toImage(gd, { format: 'png', height: 800, width: 800 });
+            })
+                .then(function (url) {
                 window.callPhantom(url);
             });
         }, trace, layout);
-        await Promise.delay(5000);
+        await Bluebird.delay(5000);
         const url = await outObj.property('data_url');
         return url;
     });
@@ -47,6 +49,3 @@ const plot = async (trace, layout, options) => {
 process.on('exit', () => {
     phantomPool.drain().then(() => phantomPool.clear());
 });
-exports.default = {
-    plot
-};

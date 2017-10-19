@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
 const _ = require("lodash");
-const Worker = require("../../utils/Worker");
-Promise = require('bluebird');
+const Worker = require("utils/Worker");
+const Bluebird = require("bluebird");
 ava_1.default("Can distribute simple function to many threads", async (t) => {
     const work = (i) => i + 1;
     const pool = Worker.createPool(work);
@@ -47,5 +47,5 @@ ava_1.default('Worker pool can execute many functions', async (t) => {
             t.is(data, 3);
         });
     });
-    await Promise.all(promises);
+    await Bluebird.all(promises);
 });

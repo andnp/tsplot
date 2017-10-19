@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Bluebird = require("bluebird");
 const Pool = require("generic-pool");
 const uuid = require("uuid/v4");
-Promise = require('bluebird');
 const Threads = require('webworker-threads');
 const Worker = Threads.Worker;
 ;
@@ -26,9 +26,9 @@ function createPool(funct) {
     const pool_mixin = {
         use(data) {
             const id = uuid();
-            return pool.acquire()
+            return Bluebird.resolve(pool.acquire())
                 .then((w) => {
-                return new Promise((resolve) => {
+                return new Bluebird((resolve) => {
                     w.postMessage({ id, data });
                     w.onmessage = (e) => {
                         if (e.data.id === id)

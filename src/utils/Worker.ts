@@ -1,13 +1,13 @@
+import * as Bluebird from 'bluebird';
 import * as Pool from 'generic-pool';
 import * as uuid from 'uuid/v4';
 
-Promise = require('bluebird');
 const Threads = require('webworker-threads');
 
 const Worker = Threads.Worker;
 
 interface PoolLambda<t> extends Pool.Pool<t> {
-    use: (data: any) => Promise<t>;
+    use(data: any): Bluebird<t>;
 };
 
 export function createPool(funct: Function): PoolLambda<Object> {
@@ -34,9 +34,9 @@ export function createPool(funct: Function): PoolLambda<Object> {
     const pool_mixin = {
         use(data: any) {
             const id = uuid();
-            return pool.acquire()
+            return Bluebird.resolve(pool.acquire())
                 .then((w) => {
-                    return new Promise((resolve) => {
+                    return new Bluebird((resolve) => {
                         w.postMessage({ id, data });
                         w.onmessage = (e) => {
                             if (e.data.id === id) resolve(e.data.data);

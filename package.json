@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "test": "tsc && ava"
+        "test": "tsc && NODE_PATH=\"dist/src/\" ava"
     },
     "pre-push": [
         "test"
@@ -52,7 +52,7 @@
     "name": "tsplot",
     "version": "0.0.2",
     "description": "A server-side plotting utility currently focused around phantomjs and plotly",
-    "main": "dist/index",
+    "main": "dist/src/index",
     "typings": "src/index",
     "repository": {
         "type": "git",
