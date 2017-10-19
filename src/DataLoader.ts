@@ -1,31 +1,22 @@
 import * as _ from 'lodash';
+import * as Bluebird from 'bluebird';
 import * as fs from 'fs';
 import * as Glob from 'glob';
 import * as Worker from './utils/Worker';
 import Matrix, {primitive} from './utils/Matrix';
 
-Promise = require('bluebird');
-
-export interface Path_t {
-    location: string;
-};
-
-export interface Buffer_t extends Path_t {
-    raw: Buffer;
-};
-
-export function loadFile(path: Path_t) : Promise<Buffer_t> {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path.location, (err, data) => {
+export function loadFile(path: string): Bluebird<Buffer> {
+    return new Bluebird((resolve, reject) => {
+        fs.readFile(path, (err, data) => {
             if (err) reject(err);
             else resolve(data);
         });
-    })
-    .then((raw: Buffer) => {
-        const buffer = { raw };
-        return Object.assign(path, buffer);
     });
 }
+
+export function loadJSON(path: string) {
+    return loadFile(path).then((buffer) => JSON.parse(buffer.toString()));
+};
 
 const parseCsvString = (str: string) => {
     const rows = str.split('\n');
@@ -43,27 +34,19 @@ const parseCsvString = (str: string) => {
 }
 const CSVParsePool = Worker.createPool(parseCsvString);
 
-export function readCSV(buffer: Buffer_t) : Promise<Matrix> {
-    const str = buffer.raw.toString();
+export function readCSV(buffer: Buffer) {
+    const str = buffer.toString();
     return CSVParsePool.use(str)
         .then((data: Array<Array<primitive>>) => {
             return new Matrix(data);
         });
 }
 
-export function readGlob(path: Path_t) : Promise<Array<Path_t>> {
-    return new Promise((resolve, reject) => {
-        Glob(path.location, (err, files: Array<string>) => {
+export function readGlob(path: string): Bluebird<string[]> {
+    return new Bluebird((resolve, reject) => {
+        Glob(path, (err, files: Array<string>) => {
             if (err) reject(err);
             else resolve(files);
-        });
-    })
-    .then((files: Array<string>) => {
-        return files.map((file: string) => {
-            const path: Path_t = {
-                location: file
-            };
-            return path;
         });
     });
 };
