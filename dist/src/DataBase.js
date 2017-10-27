@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 function join(arr1, arr2, key) {
-    return arr1.map((obj1) => {
+    return _.filter(arr1.map((obj1) => {
         const match = arr2.filter((obj2) => obj2[key] === obj1[key])[0];
+        if (!match)
+            return;
         return _.merge(obj1, match);
-    });
+    }));
 }
 exports.join = join;
