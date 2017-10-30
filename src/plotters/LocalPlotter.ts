@@ -3,20 +3,24 @@
 
 import * as _ from 'lodash';
 import * as Bluebird from 'bluebird';
+
 const createPhantomPool = require('phantom-pool');
 const URL2Image = require('image-data-uri');
 
 const plotly = require.resolve('plotly.js/dist/plotly.min.js');
 const d3 = require.resolve('d3/d3.min.js');
 
-const phantomPool = createPhantomPool({
-    max: 8,
-    min: 2,
-    maxUses: 200,
-    autostart: false
-});
+let phantomPool: any;
 
 export const plot = async (trace: any, layout: any, options: any) => {
+    if (!phantomPool) {
+        phantomPool = createPhantomPool({
+            max: 8,
+            min: 0,
+            maxUses: 200,
+            autostart: false
+        });
+    }
     // The following function is stringified then sent (as a string) to a PhantomJS instance to be evaluated.
     const url = await phantomPool.use(async function (instance: any) {
         let Plotly: any = {};
@@ -55,5 +59,7 @@ export const plot = async (trace: any, layout: any, options: any) => {
 };
 
 process.on('exit', () => {
+    if (!phantomPool) return;
     phantomPool.drain().then(() => phantomPool.clear());
 });
+

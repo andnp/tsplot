@@ -10,3 +10,12 @@ function join(arr1, arr2, key) {
     }));
 }
 exports.join = join;
+function joinBy(arr1, arr2, comp) {
+    return _.filter(arr1.map((obj1) => {
+        const match = arr2.filter((u) => comp(obj1, u))[0];
+        if (!match)
+            return;
+        return _.merge(obj1, match);
+    }));
+}
+exports.joinBy = joinBy;
