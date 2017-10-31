@@ -17,7 +17,7 @@ const DataBase_i = require("./DataBase");
 exports.MapUtils = MapUtils_i;
 exports.ObjectUtils = ObjectUtils_i;
 exports.DataBase = DataBase_i;
-const _ = require("lodash");
-if (module) {
-    module.exports = _.merge(module.exports, require('./utils/Worker'), require('./DataLoader'), require('./Plotters'));
-}
+// should polyfill these out for use in browser
+__export(require("./utils/Worker"));
+__export(require("./DataLoader"));
+__export(require("./Plotters"));

@@ -1,21 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
-function join(arr1, arr2, key) {
-    return _.filter(arr1.map((obj1) => {
-        const match = arr2.filter((obj2) => obj2[key] === obj1[key])[0];
-        if (!match)
-            return;
-        return _.merge(obj1, match);
-    }));
-}
-exports.join = join;
 function joinBy(arr1, arr2, comp) {
-    return _.filter(arr1.map((obj1) => {
-        const match = arr2.filter((u) => comp(obj1, u))[0];
-        if (!match)
+    const notJoined = [[], []];
+    const arr2Joined = [];
+    const keyed2 = arr2.map((obj2, i) => {
+        return {
+            data: obj2,
+            id: i
+        };
+    });
+    const joined = _.filter(arr1.map((obj1) => {
+        const match = keyed2.filter((keyed) => comp(obj1, keyed.data))[0];
+        if (!match) {
+            notJoined[0].push(obj1);
             return;
-        return _.merge(obj1, match);
+        }
+        arr2Joined.push(match.id);
+        return _.merge(obj1, match.data);
     }));
+    const opposite = _.difference(_.times(arr2.length, (i) => i), arr2Joined);
+    notJoined[1] = opposite.map((i) => arr2[i]);
+    return {
+        joined,
+        notJoined
+    };
 }
 exports.joinBy = joinBy;
+function join(arr1, arr2, key) {
+    return joinBy(arr1, arr2, (t, u) => t[key] === u[key]);
+}
+exports.join = join;

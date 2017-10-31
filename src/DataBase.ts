@@ -4,18 +4,38 @@ interface obj {
     [key: string]: any;
 }
 
-export function join<T extends obj, U extends obj>(arr1: T[], arr2: U[], key: keyof T & keyof U) {
-    return _.filter(arr1.map((obj1) => {
-        const match = arr2.filter((obj2) => obj2[key] === obj1[key])[0];
-        if (!match) return;
-        return _.merge(obj1, match);
+export function joinBy<T extends obj, U extends obj>(arr1: T[], arr2: U[], comp: (t: T, u: U) => boolean) {
+    const notJoined: [T[], U[]] = [[], []];
+    const arr2Joined: number[] = [];
+
+    const keyed2 = arr2.map((obj2, i) => {
+        return {
+            data: obj2,
+            id: i
+        };
+    });
+
+    const joined = _.filter(arr1.map((obj1) => {
+        const match = keyed2.filter((keyed) => comp(obj1, keyed.data))[0];
+
+        if (!match) {
+            notJoined[0].push(obj1);
+            return;
+        }
+
+        arr2Joined.push(match.id);
+        return _.merge(obj1, match.data);
     })) as (T & U)[];
+
+    const opposite = _.difference(_.times(arr2.length, (i) => i), arr2Joined);
+    notJoined[1] = opposite.map((i) => arr2[i]);
+
+    return {
+        joined,
+        notJoined
+    };
 }
 
-export function joinBy<T extends obj, U extends obj>(arr1: T[], arr2: U[], comp: (t: T, u: U) => boolean) {
-    return _.filter(arr1.map((obj1) => {
-        const match = arr2.filter((u) => comp(obj1, u))[0];
-        if (!match) return;
-        return _.merge(obj1, match);
-    })) as (T & U)[];
+export function join<T extends obj, U extends obj>(arr1: T[], arr2: U[], key: keyof T & keyof U) {
+    return joinBy(arr1, arr2, (t, u) => t[key] === u[key]);
 }

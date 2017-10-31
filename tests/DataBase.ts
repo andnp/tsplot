@@ -19,7 +19,7 @@ test("Can join two arrays of objects with matching key", async t => {
         data2: "merpmerp"
     }];
 
-    const o = DataBase.join(obj1, obj2, 'id');
+    const o = DataBase.join(obj1, obj2, 'id').joined;
     const e = [{
         id: 1,
         data1: "hey",
@@ -46,7 +46,7 @@ test("Can join two arrays of objects with matching key and missing data", async 
         data2: "merp"
     }];
 
-    const o = DataBase.join(obj1, obj2, 'id');
+    const o = DataBase.join(obj1, obj2, 'id').joined;
     const e = [{
         id: 2,
         data1: "there",
@@ -69,7 +69,7 @@ test("Can join two arrays of objects by conditional", async t => {
         data2: "hey"
     }];
 
-    const o = DataBase.joinBy(obj1, obj2, (o1, o2) => o1.data1 === o2.data2);
+    const o = DataBase.joinBy(obj1, obj2, (o1, o2) => o1.data1 === o2.data2).joined;
     const e = [{
         id: 2,
         data1: "hey",
