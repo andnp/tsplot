@@ -41,14 +41,13 @@ ava_1.default("Can join two arrays of objects with matching key and missing data
             id: 2,
             data2: "merp"
         }];
-    const o = DataBase.join(obj1, obj2, 'id');
+    const o = DataBase.join(obj1, obj2, 'id').joined;
     const e = [{
             id: 2,
             data1: "there",
             data2: "merp"
         }];
-    console.log(o);
-    t.deepEqual(o.joined, e);
+    t.deepEqual(o, e);
 });
 ava_1.default("Can join two arrays of objects by conditional", async (t) => {
     const obj1 = [{

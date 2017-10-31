@@ -10,17 +10,17 @@ function joinBy(arr1, arr2, comp) {
             id: i
         };
     });
-    const joined = _.filter(arr1.map((obj1) => {
+    const joined = _.filter(arr1.map((obj1, index) => {
         const match = keyed2.filter((keyed) => comp(obj1, keyed.data))[0];
         if (!match) {
-            notJoined[0].push(obj1);
+            notJoined[0].push(index);
             return;
         }
         arr2Joined.push(match.id);
         return _.merge(obj1, match.data);
     }));
     const opposite = _.difference(_.times(arr2.length, (i) => i), arr2Joined);
-    notJoined[1] = opposite.map((i) => arr2[i]);
+    notJoined[1] = opposite;
     return {
         joined,
         notJoined

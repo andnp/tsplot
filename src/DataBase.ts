@@ -5,7 +5,7 @@ interface obj {
 }
 
 export function joinBy<T extends obj, U extends obj>(arr1: T[], arr2: U[], comp: (t: T, u: U) => boolean) {
-    const notJoined: [T[], U[]] = [[], []];
+    const notJoined: [number[], number[]] = [[], []];
     const arr2Joined: number[] = [];
 
     const keyed2 = arr2.map((obj2, i) => {
@@ -15,11 +15,11 @@ export function joinBy<T extends obj, U extends obj>(arr1: T[], arr2: U[], comp:
         };
     });
 
-    const joined = _.filter(arr1.map((obj1) => {
+    const joined = _.filter(arr1.map((obj1, index) => {
         const match = keyed2.filter((keyed) => comp(obj1, keyed.data))[0];
 
         if (!match) {
-            notJoined[0].push(obj1);
+            notJoined[0].push(index);
             return;
         }
 
@@ -28,7 +28,7 @@ export function joinBy<T extends obj, U extends obj>(arr1: T[], arr2: U[], comp:
     })) as (T & U)[];
 
     const opposite = _.difference(_.times(arr2.length, (i) => i), arr2Joined);
-    notJoined[1] = opposite.map((i) => arr2[i]);
+    notJoined[1] = opposite;
 
     return {
         joined,
