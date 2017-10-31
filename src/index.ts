@@ -14,16 +14,7 @@ export const MapUtils = MapUtils_i;
 export const ObjectUtils = ObjectUtils_i;
 export const DataBase = DataBase_i;
 
-import * as _ from 'lodash';
-
-if (module) {
-    module.exports = _.merge(module.exports,
-        require('./utils/Worker'),
-        require('./DataLoader'),
-        require('./Plotters')
-    );
-}
-
-import * as Worker_i from './utils/Worker';
-import * as DataLoader_i from './DataLoader';
-import * as Plotters_i from './Plotters';
+// should polyfill these out for use in browser
+export * from './utils/Worker';
+export * from './DataLoader';
+export * from './Plotters';
