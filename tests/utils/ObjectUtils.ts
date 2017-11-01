@@ -68,3 +68,20 @@ test("Can flatten a nested array", t => {
     const output = ObjectUtils.flattenKeys(obj);
     t.deepEqual(output, expected);
 });
+
+test("Can count occurrences of a key", t => {
+    const obj = [{
+        hi: 1
+    }, {
+        hi: 2
+    }, {
+        hi: 1
+    }];
+    const expected = {
+        1: 2,
+        2: 1
+    };
+
+    const output = ObjectUtils.countOccurrences(obj, "hi");
+    t.deepEqual(output, expected);
+});

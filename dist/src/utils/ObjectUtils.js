@@ -21,3 +21,15 @@ function flattenKeys(obj) {
     return retObj;
 }
 exports.flattenKeys = flattenKeys;
+function countOccurrences(obj, key) {
+    const ret = {};
+    obj.forEach((v) => {
+        const value = v[key];
+        if (ret[value])
+            ret[value]++;
+        else
+            ret[value] = 1;
+    });
+    return ret;
+}
+exports.countOccurrences = countOccurrences;
