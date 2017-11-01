@@ -6,11 +6,11 @@ const Threads = require('webworker-threads');
 
 const Worker = Threads.Worker;
 
-interface PoolLambda<t> extends Pool.Pool<t> {
-    use(data: any): Bluebird<t>;
+interface PoolLambda<T> extends Pool.Pool<T> {
+    use(data: any): Bluebird<T>;
 };
 
-export function createPool(funct: Function): PoolLambda<Object> {
+export function createPool<T, U>(funct: (x: U) => T): PoolLambda<T> {
     const execString = `
         this.onmessage = (event) => {
             const data = (${funct.toString()})(event.data.data);
@@ -47,5 +47,5 @@ export function createPool(funct: Function): PoolLambda<Object> {
         }
     };
 
-    return Object.assign(pool, pool_mixin);
+    return Object.assign(pool as any, pool_mixin);
 };

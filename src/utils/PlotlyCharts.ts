@@ -1,4 +1,5 @@
 import * as Plotly from 'plotly.js';
+import * as _ from 'lodash';
 
 export interface Trace_t {
     type: 'scatter' | 'heatmap';
@@ -32,8 +33,35 @@ export function combineTraces(plots: Array<Chart>, name: string) {
     plots.forEach((plot) => {
         traces = traces.concat(plot.trace)
     });
+
+    const xrange = _.filter(plots.map((plot) => {
+        if (plot.layout.xaxis) {
+            return plot.layout.xaxis.range;
+        }
+    })) as [Plotly.Datum, Plotly.Datum][];
+
+    const yrange = _.filter(plots.map((plot) => {
+        if (plot.layout.yaxis) {
+            return plot.layout.yaxis.range;
+        }
+    })) as [Plotly.Datum, Plotly.Datum][];
+
+    const xmin = _.min(xrange.map((range) => range[0])) as number;
+    const xmax = _.max(xrange.map((range) => range[1])) as number;
+    const ymin = _.min(yrange.map((range) => range[0])) as number;
+    const ymax = _.max(yrange.map((range) => range[1])) as number;
+
+    const layout: Layout_t = {
+        xaxis: {
+            range: [xmin, xmax]
+        },
+        yaxis: {
+            range: [ymin, ymax]
+        }
+    };
+
     const plot = {
-        layout: plots[0].layout,
+        layout: _.merge(plots[0].layout, layout),
         trace: traces,
         name
     };

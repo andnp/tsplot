@@ -37,7 +37,7 @@ const CSVParsePool = Worker.createPool(parseCsvString);
 export function readCSV(buffer: Buffer) {
     const str = buffer.toString();
     return CSVParsePool.use(str)
-        .then((data: Array<Array<primitive>>) => {
+        .then((data: Array<Array<number>>) => {
             return new Matrix(data);
         });
 }

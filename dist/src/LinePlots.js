@@ -23,7 +23,8 @@ const getLineObject = (x, y, options) => {
         x, y,
         line: {
             width: 1,
-            color: `rgb(${r}, ${g}, ${b})`
+            color: `rgb(${r}, ${g}, ${b})`,
+            shape: 'spline'
         }
     }, options);
 };

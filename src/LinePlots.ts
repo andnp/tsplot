@@ -25,6 +25,7 @@ export interface Line_t extends Partial<PlotlyCharts.Trace_t> {
     y: Array<number>;
     line: {
         color: string;
+        shape: 'linear' | 'spline';
     };
     fill: string;
     fillcolor: string;
@@ -38,7 +39,8 @@ const getLineObject = (x: Array<number>, y: Array<number>, options: Partial<Plot
         x, y,
         line: {
             width: 1,
-            color: `rgb(${r}, ${g}, ${b})`
+            color: `rgb(${r}, ${g}, ${b})`,
+            shape: 'spline'
         }
     }, options);
 };
