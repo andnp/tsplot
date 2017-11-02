@@ -33,7 +33,7 @@
         "nyc": "^11.1.0",
         "pre-push": "^0.1.1",
         "ts-node": "^3.3.0",
-        "typescript": "^2.5.2"
+        "typescript": "^2.6.0"
     },
     "nyc": {
         "exclude": [

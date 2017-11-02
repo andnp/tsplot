@@ -31,5 +31,5 @@ export function weightedMean(weights: Dictionary_t<number>, x: Dictionary_t<numb
         const value = x[key] ? x[key] : 0;
         return weight * value;
     }));
-    return dot / _.keys(x).length;
+    return dot;
 }

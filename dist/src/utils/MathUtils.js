@@ -28,6 +28,6 @@ function weightedMean(weights, x) {
         const value = x[key] ? x[key] : 0;
         return weight * value;
     }));
-    return dot / _.keys(x).length;
+    return dot;
 }
 exports.weightedMean = weightedMean;
