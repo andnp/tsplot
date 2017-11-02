@@ -1,14 +1,10 @@
-interface CartesianProductParam_t {
-    [k: string]: Array<number | string | boolean>
-}
+import { Dictionary_t } from '../utils/tsUtils';
+import * as _ from 'lodash';
 
-interface Setting_t {
-    [k: string]: number | string | boolean
-}
-
-export function cartesianProduct(obj: CartesianProductParam_t) {
+type primitive = string | number | boolean | null | undefined;
+export function cartesianProduct(obj: Dictionary_t<primitive[]>) {
     const keys = Object.keys(obj);
-    const settings: Setting_t[] = [];
+    const settings: Dictionary_t<primitive>[] = [];
     let count = 1;
     keys.forEach((k) => {
         count *= obj[k].length;
@@ -16,7 +12,7 @@ export function cartesianProduct(obj: CartesianProductParam_t) {
 
     for (let i = 0; i < count; ++i) {
         let accum = 1;
-        const setting: Setting_t = {};
+        const setting: Dictionary_t<primitive> = {};
         keys.forEach((k) => {
             const p = obj[k];
             setting[k] = p[Math.floor(i / accum) % p.length];
@@ -26,4 +22,14 @@ export function cartesianProduct(obj: CartesianProductParam_t) {
     }
 
     return settings;
+}
+
+export function weightedMean(weights: Dictionary_t<number>, x: Dictionary_t<number>) {
+    const keys = _.keys(weights);
+    const dot = _.sum(keys.map((key) => {
+        const weight = weights[key];
+        const value = x[key] ? x[key] : 0;
+        return weight * value;
+    }));
+    return dot / _.keys(x).length;
 }

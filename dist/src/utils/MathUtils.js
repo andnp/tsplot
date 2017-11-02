@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const _ = require("lodash");
 function cartesianProduct(obj) {
     const keys = Object.keys(obj);
     const settings = [];
@@ -20,3 +21,13 @@ function cartesianProduct(obj) {
     return settings;
 }
 exports.cartesianProduct = cartesianProduct;
+function weightedMean(weights, x) {
+    const keys = _.keys(weights);
+    const dot = _.sum(keys.map((key) => {
+        const weight = weights[key];
+        const value = x[key] ? x[key] : 0;
+        return weight * value;
+    }));
+    return dot / _.keys(x).length;
+}
+exports.weightedMean = weightedMean;

@@ -21,3 +21,22 @@ test("Can generate the cartesian product of an object of arrays", t => {
     const output = MathUtils.cartesianProduct(x);
     t.deepEqual(output, e);
 });
+
+test("Can calculate a weighted mean!", t => {
+    const weights = {
+        x: 1,
+        y: 1,
+        k: 2
+    };
+
+    const data = {
+        x: 1,
+        y: 2,
+        k: 3
+    };
+
+    const e = 3;
+
+    const output = MathUtils.weightedMean(weights, data);
+    t.is(output, e);
+});
