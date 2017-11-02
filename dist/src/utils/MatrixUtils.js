@@ -30,27 +30,31 @@ function standardError(arr) {
     return Math.sqrt(variance) / Math.sqrt(arr.length);
 }
 ;
-function describe(arr) {
+function describe(arr, options) {
+    let recoded = arr;
+    if (options) {
+        recoded = options.ignoreNan ? arr.filter((k) => !_.isNaN(k)) : recoded;
+    }
     return {
-        mean: _.mean(arr),
-        stderr: standardError(arr),
-        count: arr.length
+        mean: _.mean(recoded),
+        stderr: standardError(recoded),
+        count: recoded.length
     };
 }
-function describeColumns(m) {
+function describeColumns(m, options) {
     const { cols } = m.dims();
     return _.times(cols, (i) => {
         const col = m.getCol(i);
-        return describe(col);
+        return describe(col, options);
     });
 }
 exports.describeColumns = describeColumns;
 ;
-function describeRows(m) {
+function describeRows(m, options) {
     const { rows } = m.dims();
     return _.times(rows, (i) => {
         const row = m.getRow(i);
-        return describe(row);
+        return describe(row, options);
     });
 }
 exports.describeRows = describeRows;

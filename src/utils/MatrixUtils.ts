@@ -19,6 +19,10 @@ export interface ArrayStats {
     count: number;
 };
 
+export interface DescriptionOptions_t {
+    ignoreNan: boolean;
+}
+
 function standardError(arr: Array<number>) {
     let n = 0;
     let m = 0;
@@ -34,26 +38,30 @@ function standardError(arr: Array<number>) {
     return Math.sqrt(variance) / Math.sqrt(arr.length);
 };
 
-function describe(arr: Array<number>) {
+function describe(arr: Array<number>, options?: DescriptionOptions_t) {
+    let recoded = arr;
+    if (options) {
+        recoded = options.ignoreNan ? arr.filter((k) => !_.isNaN(k)) : recoded;
+    }
     return {
-        mean: _.mean(arr),
-        stderr: standardError(arr),
-        count: arr.length
+        mean: _.mean(recoded),
+        stderr: standardError(recoded),
+        count: recoded.length
     }
 }
 
-export function describeColumns(m : Matrix) {
+export function describeColumns(m : Matrix, options?: DescriptionOptions_t) {
     const { cols } = m.dims();
     return _.times<ArrayStats>(cols, (i) => {
         const col = m.getCol(i);
-        return describe(col);
+        return describe(col, options);
     });
 };
 
-export function describeRows(m : Matrix) {
+export function describeRows(m : Matrix, options?: DescriptionOptions_t) {
     const { rows } = m.dims();
     return _.times<ArrayStats>(rows, (i) => {
         const row = m.getRow(i);
-        return describe(row);
+        return describe(row, options);
     });
 };
