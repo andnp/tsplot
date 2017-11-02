@@ -19,6 +19,9 @@ ava_1.default("Can generate the cartesian product of an object of arrays", t => 
     const output = MathUtils.cartesianProduct(x);
     t.deepEqual(output, e);
 });
+const isClose = (x, y) => {
+    return Math.abs(x - y) < 1e-7;
+};
 ava_1.default("Can calculate a weighted mean!", t => {
     const weights = {
         x: .2,
@@ -31,6 +34,6 @@ ava_1.default("Can calculate a weighted mean!", t => {
         k: 3
     };
     const e = 1.8;
-    const output = MathUtils.weightedMean(weights, data);
-    t.is(output, e);
+    const o = MathUtils.weightedMean(weights, data);
+    t.true(isClose(e, o));
 });

@@ -22,6 +22,10 @@ test("Can generate the cartesian product of an object of arrays", t => {
     t.deepEqual(output, e);
 });
 
+const isClose = (x: number, y: number) => {
+    return Math.abs(x - y) < 1e-7;
+};
+
 test("Can calculate a weighted mean!", t => {
     const weights = {
         x: .2,
@@ -37,6 +41,6 @@ test("Can calculate a weighted mean!", t => {
 
     const e = 1.8;
 
-    const output = MathUtils.weightedMean(weights, data);
-    t.is(output, e);
+    const o = MathUtils.weightedMean(weights, data);
+    t.true(isClose(e, o));
 });
