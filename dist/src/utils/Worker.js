@@ -22,7 +22,7 @@ function createPool(funct) {
         w.terminate();
         return Promise.resolve(undefined);
     };
-    const pool = Pool.createPool({ create, destroy }, { min: 2, max: 8, autostart: false });
+    const pool = Pool.createPool({ create, destroy }, { min: 0, max: 8, autostart: false });
     const pool_mixin = {
         use(data) {
             const id = uuid();
