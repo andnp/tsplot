@@ -6,10 +6,12 @@ export * from './LinePlots';
 export * from './Heatmaps';
 export * from './utils/PlotlyCharts';
 
+import * as RemoteSocket_i from './plotters/RemotePlotter';
 import * as MapUtils_i from './utils/MapUtils';
 import * as ObjectUtils_i from './utils/ObjectUtils';
 import * as DataBase_i from './DataBase';
 
+export const RemoteSocket = RemoteSocket_i;
 export const MapUtils = MapUtils_i;
 export const ObjectUtils = ObjectUtils_i;
 export const DataBase = DataBase_i;
