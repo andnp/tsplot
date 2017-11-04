@@ -30,7 +30,7 @@ export function createPool<T, U>(funct: (x: U) => T): PoolLambda<T> {
         return Promise.resolve(undefined);
     };
 
-    const pool = Pool.createPool({ create, destroy }, { min: 2, max: 8, autostart: false });
+    const pool = Pool.createPool({ create, destroy }, { min: 0, max: 8, autostart: false });
     const pool_mixin = {
         use(data: any) {
             const id = uuid();

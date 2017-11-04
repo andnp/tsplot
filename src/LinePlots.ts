@@ -15,7 +15,6 @@ const color_palette = [
 ];
 
 let colorIndex = 0;
-
 const getColor = () => color_palette[colorIndex++ % color_palette.length];
 
 export interface Line_t extends Partial<PlotlyCharts.Trace_t> {
@@ -27,7 +26,7 @@ export interface Line_t extends Partial<PlotlyCharts.Trace_t> {
         color: string;
         shape: 'linear' | 'spline';
     };
-    fill: string;
+    fill: "tozeroy";
     fillcolor: string;
 };
 

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 export type primitive = number;
 export type Dim = {rows: number, cols: number};
-class Matrix {
+export default class Matrix {
     private data: Array<Array<primitive>> = [];
     private transposed: boolean = false;
 
@@ -140,5 +140,3 @@ class Matrix {
         }
     }
 }
-
-export default Matrix;
