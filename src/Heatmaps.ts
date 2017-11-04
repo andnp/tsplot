@@ -1,4 +1,3 @@
-import * as Plotly from 'plotly.js';
 import * as _ from 'lodash';
 import Matrix from './utils/Matrix';
 import * as PlotlyCharts from './utils/PlotlyCharts';
