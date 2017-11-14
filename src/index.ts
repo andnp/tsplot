@@ -1,3 +1,8 @@
+import * as Bluebird from 'bluebird';
+Bluebird.config({
+    cancellation: true
+});
+
 export { default as Matrix } from './utils/Matrix';
 export * from './utils/MatrixUtils';
 export * from './utils/ArrayUtils';
