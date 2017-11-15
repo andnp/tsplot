@@ -11,3 +11,4 @@ json.version = [major, minor, parseInt(patch) + 1].join('.');
 fs.writeFileSync('package.json', JSON.stringify(json, undefined, 4));
 
 exec("git add package.json && git commit -m 'bump version'");
+exec("git add dist && git commit -m 'add build files'");

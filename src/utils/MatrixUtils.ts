@@ -45,7 +45,7 @@ function describe(arr: Array<number>, options?: DescriptionOptions_t) {
     }
     return {
         mean: _.mean(recoded),
-        stderr: standardError(recoded),
+        stderr: standardError(recoded) || 0,
         count: recoded.length
     }
 }
