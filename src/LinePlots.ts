@@ -93,8 +93,8 @@ export function generateLinePlot_ste(array: Array<MatrixUtils.ArrayStats>, optio
     const ste_x = [...x, ..._.reverse([...x])];
     const ste_y = [];
 
-    for (let i = 0; i < y.length; ++i) ste_y.push(y[i] - array[i].stderr);
-    for (let i = y.length - 1; i >= 0; --i) ste_y.push(y[i] + array[i].stderr);
+    for (let i = 0; i < y.length; ++i) ste_y.push(y[i] - (array[i].stderr || 0));
+    for (let i = y.length - 1; i >= 0; --i) ste_y.push(y[i] + (array[i].stderr || 0));
 
     colorIndex--;
     const [r, g, b] = getColor();
