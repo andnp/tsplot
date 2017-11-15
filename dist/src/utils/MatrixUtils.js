@@ -37,7 +37,7 @@ function describe(arr, options) {
     }
     return {
         mean: _.mean(recoded),
-        stderr: standardError(recoded),
+        stderr: standardError(recoded) || 0,
         count: recoded.length
     };
 }
