@@ -32,3 +32,7 @@ export function weightedMean(weights: Record<string, number>, x: Record<string, 
     }));
     return dot;
 }
+
+export function isClose(x: number, y: number): boolean {
+    return Math.abs(x - y) < 1e-7;
+}

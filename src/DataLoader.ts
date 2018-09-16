@@ -3,7 +3,7 @@ import * as Bluebird from 'bluebird';
 import * as fs from 'fs';
 import * as Glob from 'glob';
 import * as Worker from './utils/Worker';
-import Matrix, {primitive} from './utils/Matrix';
+import Matrix from './utils/Matrix';
 
 export function loadFile(path: string): Bluebird<Buffer> {
     return new Bluebird((resolve, reject) => {
@@ -38,7 +38,7 @@ export function readCSV(buffer: Buffer) {
     const str = buffer.toString();
     return CSVParsePool.use(str)
         .then((data: Array<Array<number>>) => {
-            return new Matrix(data);
+            return Matrix.fromData(data);
         });
 }
 

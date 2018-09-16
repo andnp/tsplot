@@ -2,6 +2,7 @@ import test from 'ava';
 
 import * as DataLoader from 'DataLoader';
 import Matrix from 'utils/Matrix';
+import { isClose } from 'index';
 
 const rootDir = __dirname + '/../..';
 
@@ -26,8 +27,8 @@ test("Parses CSV files and converts numbers to floats", async t => {
     return DataLoader.loadFile(`${rootDir}/TestMatrix.csv`)
     .then(DataLoader.readCSV)
     .then((m: Matrix) => {
-        t.is(m.get(0, 0), 1.1);
-        t.is(m.get(1, 2), 6.6);
+        t.true(isClose(m.get(0, 0), 1.1));
+        t.true(isClose(m.get(1, 2), 6.6));
     });
 });
 

@@ -42,7 +42,7 @@ function readCSV(buffer) {
     const str = buffer.toString();
     return CSVParsePool.use(str)
         .then((data) => {
-        return new Matrix_1.default(data);
+        return Matrix_1.default.fromData(data);
     });
 }
 exports.readCSV = readCSV;

@@ -4,7 +4,7 @@ const ava_1 = require("ava");
 const Matrix_1 = require("utils/Matrix");
 const MatrixUtil = require("utils/MatrixUtils");
 ava_1.default.beforeEach(t => {
-    t.context.matrix = new Matrix_1.default([
+    t.context.matrix = Matrix_1.default.fromData([
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
@@ -54,18 +54,18 @@ ava_1.default("Throws error when get out of bounds", t => {
     }
 });
 ava_1.default("Can get a matrix from another", t => {
-    const m = new Matrix_1.default([
+    const m = Matrix_1.default.fromData([
         [0, 1],
         [2, 3],
         [4, 5]
     ]);
     m.transpose();
-    const n = Matrix_1.default.from(m);
-    const e = new Matrix_1.default([
+    const n = Matrix_1.default.fromMatrix(m);
+    const e = Matrix_1.default.fromData([
         [0, 2, 4],
         [1, 3, 5]
     ]);
-    t.deepEqual(n, e);
+    t.true(e.equal(n));
 });
 ava_1.default("Can add a row to a matrix", t => {
     const m = t.context.matrix;
@@ -73,6 +73,13 @@ ava_1.default("Can add a row to a matrix", t => {
     const { rows, cols } = m.dims();
     t.is(rows, 4);
     t.is(cols, 3);
+    const e = Matrix_1.default.fromData([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [1, 2, 3],
+    ]);
+    t.true(m.equal(e));
 });
 ava_1.default("Can add a col to a matrix", t => {
     const m = t.context.matrix;
@@ -80,6 +87,12 @@ ava_1.default("Can add a col to a matrix", t => {
     const { rows, cols } = m.dims();
     t.is(rows, 3);
     t.is(cols, 4);
+    const e = Matrix_1.default.fromData([
+        [1, 2, 3, 1],
+        [4, 5, 6, 2],
+        [7, 8, 9, 3],
+    ]);
+    t.true(m.equal(e));
 });
 ava_1.default("Can get a row", t => {
     const m = t.context.matrix;
@@ -94,50 +107,50 @@ ava_1.default("Can get a col", t => {
 ava_1.default("Can force a matrix to resize smaller", t => {
     const m = t.context.matrix;
     m.forceReshape({ rows: 2, cols: 2 });
-    t.deepEqual(new Matrix_1.default([
+    t.true(Matrix_1.default.fromData([
         [1, 2],
         [4, 5]
-    ]), m);
+    ]).equal(m));
 });
 ava_1.default("Can force a matrix to resize larger", t => {
     const m = t.context.matrix;
     m.forceReshape({ rows: 4, cols: 4 });
-    t.deepEqual(new Matrix_1.default([
+    t.true(Matrix_1.default.fromData([
         [1, 2, 3, 0],
         [4, 5, 6, 0],
         [7, 8, 9, 0],
         [0, 0, 0, 0]
-    ]), m);
+    ]).equal(m));
 });
 ava_1.default("Can build a matrix of zeros", t => {
     const m = Matrix_1.default.Zeros({ rows: 3, cols: 2 });
-    t.deepEqual(new Matrix_1.default([
+    t.true(Matrix_1.default.fromData([
         [0, 0],
         [0, 0],
         [0, 0]
-    ]), m);
+    ]).equal(m));
 });
 ava_1.default("Can append columns of matrices into one matrix", t => {
-    const m1 = new Matrix_1.default([
+    const m1 = Matrix_1.default.fromData([
         [1, 2],
         [3, 4],
         [5, 6]
     ]);
-    const m2 = new Matrix_1.default([
+    const m2 = Matrix_1.default.fromData([
         [3, 4],
         [5, 6],
         [7, 8]
     ]);
-    const m3 = new Matrix_1.default([
+    const m3 = Matrix_1.default.fromData([
         [5, 6],
         [7, 8],
         [9, 0]
     ]);
-    const e = new Matrix_1.default([
+    const e = Matrix_1.default.fromData([
         [1, 2, 3, 4, 5, 6],
         [3, 4, 5, 6, 7, 8],
         [5, 6, 7, 8, 9, 0]
     ]);
     const o = MatrixUtil.appendRight([m1, m2, m3]);
-    t.deepEqual(o, e);
+    t.true(o.equal(e));
 });

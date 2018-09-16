@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Matrix_1 = require("./Matrix");
 const _ = require("lodash");
 function appendRight(matrices) {
-    const o = new Matrix_1.default(matrices[0].getData());
+    const o = Matrix_1.default.fromMatrix(matrices[0]);
     for (let i = 1; i < matrices.length; ++i) {
         const m = matrices[i];
         const { rows, cols } = m.dims();

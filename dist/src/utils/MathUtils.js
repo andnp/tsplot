@@ -31,3 +31,7 @@ function weightedMean(weights, x) {
     return dot;
 }
 exports.weightedMean = weightedMean;
+function isClose(x, y) {
+    return Math.abs(x - y) < 1e-7;
+}
+exports.isClose = isClose;

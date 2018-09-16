@@ -1,8 +1,8 @@
 import Matrix from './Matrix';
 import * as _ from 'lodash';
 
-export function appendRight(matrices: Array<Matrix>) {
-    const o = new Matrix(matrices[0].getData());
+export function appendRight(matrices: Array<Matrix<any>>) {
+    const o = Matrix.fromMatrix(matrices[0]);
     for (let i = 1; i < matrices.length; ++i) {
         const m = matrices[i];
         const { rows, cols } = m.dims();
