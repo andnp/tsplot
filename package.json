@@ -53,7 +53,7 @@
         ]
     },
     "name": "tsplot",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "A server-side plotting utility currently focused around phantomjs and plotly",
     "main": "dist/src/index",
     "typings": "src/index",
