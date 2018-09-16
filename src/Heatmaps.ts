@@ -10,7 +10,7 @@ export interface Heatmap_t extends Partial<PlotlyCharts.Trace_t> {
 const getHeatmapObject = (z: Matrix, options: Partial<PlotlyCharts.Trace_t>): Heatmap_t => {
     return _.mergeWith({
         type: 'heatmap',
-        z: z.getData()
+        z: z.asArrays()
     }, options);
 };
 

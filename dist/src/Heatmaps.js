@@ -6,7 +6,7 @@ const PlotlyCharts = require("./utils/PlotlyCharts");
 const getHeatmapObject = (z, options) => {
     return _.mergeWith({
         type: 'heatmap',
-        z: z.getData()
+        z: z.asArrays()
     }, options);
 };
 const getHeatmapLayout = (options) => {
