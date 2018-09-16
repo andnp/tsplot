@@ -15,17 +15,23 @@ class RemotePlotter {
         });
     }
     sendData(data) {
+        if (!this.connectionPromise)
+            throw new Error('Expected "connect" to have been called first');
         return this.connectionPromise.tap(({ socket }) => {
             socket.emit('data', data);
         });
     }
     on(event, func) {
+        if (!this.connectionPromise)
+            throw new Error('Expected "connect" to have been called first');
         this.connectionPromise.tap(({ socket }) => {
             console.log('registered');
             socket.on(event, func);
         });
     }
     onDisconnect() {
+        if (!this.connectionPromise)
+            throw new Error('Expected "connect" to have been called first');
         return this.connectionPromise.then(({ socket }) => {
             return new Bluebird((resolve) => {
                 socket.on('disconnect', () => {

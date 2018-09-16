@@ -6,7 +6,7 @@ const Threads = require('webworker-threads');
 
 const Worker = Threads.Worker;
 
-interface PoolLambda<T> extends Pool.Pool<T> {
+interface PoolLambda<T> {
     use(data: any): Bluebird<T>;
 };
 
