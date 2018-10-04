@@ -28,7 +28,7 @@ const getLineObject = (x, y, options) => {
         }
     }, options);
 };
-const getLineLayout = (options, min, max) => {
+const getLineLayout = (min, max, options) => {
     return _.mergeWith({
         xaxis: {
             showgrid: false,
@@ -52,9 +52,9 @@ function generateLinePlot(array, options) {
     // There's no way these should be undefined, but their typings imply that they might be
     const min = _.min(y) || 0;
     const max = _.max(y) || 10;
-    const trace = getLineObject(x, y, options.trace[0]);
-    const layout = getLineLayout(options.layout, min, max);
-    return new PlotlyCharts.Chart([trace], layout, options.name);
+    const trace = getLineObject(x, y, options && options.trace[0]);
+    const layout = getLineLayout(min, max, options && options.layout);
+    return new PlotlyCharts.Chart([trace], layout, options && options.name);
 }
 exports.generateLinePlot = generateLinePlot;
 function generateLinePlot_ste(array, options) {
@@ -81,12 +81,12 @@ function generateLinePlot_ste(array, options) {
     ste_trace.fill = "tozeroy";
     ste_trace.fillcolor = `rgba(${r}, ${g}, ${b}, 0.2)`;
     ste_trace.showlegend = false;
-    const layout = getLineLayout(_.merge({
+    const layout = getLineLayout(min, max, _.merge({
         showlegend: true,
         legend: {
             orientation: "h"
         }
-    }, options.layout), min, max);
+    }, options.layout));
     return new PlotlyCharts.Chart([trace, ste_trace], layout, options.name);
 }
 exports.generateLinePlot_ste = generateLinePlot_ste;
