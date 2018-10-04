@@ -1,4 +1,4 @@
-import Matrix from './Matrix';
+import { Matrix } from 'utilities-ts';
 import * as _ from 'lodash';
 
 export function appendRight(matrices: Array<Matrix<any>>) {

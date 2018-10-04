@@ -3,7 +3,7 @@ import * as Bluebird from 'bluebird';
 import * as fs from 'fs';
 import * as Glob from 'glob';
 import * as Worker from './utils/Worker';
-import Matrix from './utils/Matrix';
+import { Matrix } from 'utilities-ts';
 
 export function loadFile(path: string): Bluebird<Buffer> {
     return new Bluebird((resolve, reject) => {

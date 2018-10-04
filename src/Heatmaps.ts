@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import Matrix from './utils/Matrix';
+import { Matrix } from 'utilities-ts';
 import * as PlotlyCharts from './utils/PlotlyCharts';
 
 export interface Heatmap_t extends Partial<PlotlyCharts.Trace_t> {

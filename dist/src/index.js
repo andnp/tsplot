@@ -7,8 +7,6 @@ const Bluebird = require("bluebird");
 Bluebird.config({
     cancellation: true
 });
-var Matrix_1 = require("./utils/Matrix");
-exports.Matrix = Matrix_1.default;
 __export(require("./utils/MatrixUtils"));
 __export(require("./utils/ArrayUtils"));
 __export(require("./utils/MathUtils"));

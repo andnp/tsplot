@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Matrix_1 = require("./Matrix");
+const utilities_ts_1 = require("utilities-ts");
 const _ = require("lodash");
 function appendRight(matrices) {
-    const o = Matrix_1.default.fromMatrix(matrices[0]);
+    const o = utilities_ts_1.Matrix.fromMatrix(matrices[0]);
     for (let i = 1; i < matrices.length; ++i) {
         const m = matrices[i];
         const { rows, cols } = m.dims();

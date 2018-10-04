@@ -1,7 +1,7 @@
 import test from 'ava';
+import { Matrix } from 'utilities-ts';
 
 import * as DataLoader from 'DataLoader';
-import Matrix from 'utils/Matrix';
 import { isClose } from 'index';
 
 const rootDir = __dirname + '/../..';

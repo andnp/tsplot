@@ -4,7 +4,7 @@ const Bluebird = require("bluebird");
 const fs = require("fs");
 const Glob = require("glob");
 const Worker = require("./utils/Worker");
-const Matrix_1 = require("./utils/Matrix");
+const utilities_ts_1 = require("utilities-ts");
 function loadFile(path) {
     return new Bluebird((resolve, reject) => {
         fs.readFile(path, (err, data) => {
@@ -42,7 +42,7 @@ function readCSV(buffer) {
     const str = buffer.toString();
     return CSVParsePool.use(str)
         .then((data) => {
-        return Matrix_1.default.fromData(data);
+        return utilities_ts_1.Matrix.fromData(data);
     });
 }
 exports.readCSV = readCSV;
