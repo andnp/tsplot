@@ -105,7 +105,7 @@ export class LineChart extends PlotlyCharts.Chart {
             ...stePlot.trace[0],
             x: ste_x,
             line: {
-                shape: 'linear',
+                shape: 'spline',
             },
             fill: 'tozeroy',
             showlegend: false,

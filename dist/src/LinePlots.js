@@ -63,7 +63,7 @@ class LineChart extends PlotlyCharts.Chart {
             ste_y.push(y[i] + (arr[i].stderr || 0));
         const stePlot = this.fromArray(ste_y);
         stePlot.trace[0] = Object.assign({}, stePlot.trace[0], { x: ste_x, line: {
-                shape: 'linear',
+                shape: 'spline',
             }, fill: 'tozeroy', showlegend: false });
         linePlot.trace.push(stePlot.trace[0]);
         return linePlot;
