@@ -11,9 +11,11 @@
         "@types/lodash": "^4.14.74",
         "@types/node": "^8.0.30",
         "@types/plotly.js": "^1.28.5",
+        "@types/puppeteer": "^1.8.0",
         "d3": "^3.5.17",
         "lodash": "^4.17.4",
         "plotly.js": "^1.29.3",
+        "puppeteer": "^1.8.0",
         "utilities-ts": "git+https://github.com/andnp/utilities-ts.git"
     },
     "devDependencies": {
