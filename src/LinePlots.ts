@@ -30,7 +30,7 @@ export interface Line_t extends Partial<PlotlyCharts.Trace_t> {
     fillcolor: string;
 };
 
-const getLineObject = (x: Array<number>, y: Array<number>, options: Partial<PlotlyCharts.Trace_t>) : Line_t => {
+const getLineObject = (x: Array<number>, y: Array<number>, options?: Partial<PlotlyCharts.Trace_t>) : Line_t => {
     const [r, g, b] = options && options.line && options.line.color ? [0, 0, 0] : getColor();
     return _.mergeWith({
         type: 'scatter',
@@ -44,7 +44,7 @@ const getLineObject = (x: Array<number>, y: Array<number>, options: Partial<Plot
     }, options);
 };
 
-const getLineLayout = (options: Partial<PlotlyCharts.Layout_t>, min: number, max: number) : PlotlyCharts.Layout_t => {
+const getLineLayout = (min: number, max: number, options?: Partial<PlotlyCharts.Layout_t>) : PlotlyCharts.Layout_t => {
     return _.mergeWith({
         xaxis: {
             showgrid: false,
@@ -63,7 +63,7 @@ const getLineLayout = (options: Partial<PlotlyCharts.Layout_t>, min: number, max
     }, options);
 };
 
-export function generateLinePlot(array: Array<number>, options: PlotlyCharts.Chart) {
+export function generateLinePlot(array: Array<number>, options?: PlotlyCharts.Chart) {
     const x = _.times(array.length, (i: number) => i);
     const y = array;
 
@@ -71,10 +71,10 @@ export function generateLinePlot(array: Array<number>, options: PlotlyCharts.Cha
     const min = _.min(y) || 0;
     const max = _.max(y) || 10;
 
-    const trace = getLineObject(x, y, options.trace[0]);
-    const layout = getLineLayout(options.layout, min, max);
+    const trace = getLineObject(x, y, options && options.trace[0]);
+    const layout = getLineLayout(min, max, options && options.layout);
 
-    return new PlotlyCharts.Chart([trace], layout, options.name);
+    return new PlotlyCharts.Chart([trace], layout, options && options.name);
 }
 
 export function generateLinePlot_ste(array: Array<MatrixUtils.ArrayStats>, options: PlotlyCharts.Chart) {
@@ -105,12 +105,12 @@ export function generateLinePlot_ste(array: Array<MatrixUtils.ArrayStats>, optio
     ste_trace.fillcolor = `rgba(${r}, ${g}, ${b}, 0.2)`;
     ste_trace.showlegend = false;
 
-    const layout = getLineLayout(_.merge({
+    const layout = getLineLayout(min, max, _.merge({
         showlegend: true,
         legend: {
             orientation: "h"
         }
-    }, options.layout), min, max);
+    }, options.layout));
 
     return new PlotlyCharts.Chart([trace, ste_trace], layout, options.name);
 }

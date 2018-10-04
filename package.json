@@ -8,41 +8,19 @@
         "versionBump"
     ],
     "dependencies": {
-        "@types/bluebird": "^3.5.11",
-        "@types/generic-pool": "^3.1.0",
-        "@types/glob": "^5.0.32",
         "@types/lodash": "^4.14.74",
         "@types/node": "^8.0.30",
         "@types/plotly.js": "^1.28.5",
-        "@types/socket.io": "^1.4.31",
-        "@types/uuid": "^3.4.2",
-        "bluebird": "^3.5.0",
         "d3": "^3.5.17",
-        "generic-pool": "^3.1.7",
-        "glob": "^7.1.2",
-        "image-data-uri": "^1.0.0",
         "lodash": "^4.17.4",
-        "phantom": "^4.0.5",
-        "phantom-pool": "^1.2.2",
         "plotly.js": "^1.29.3",
-        "socket.io": "^2.0.4",
-        "utilities-ts": "git+https://github.com/andnp/utilities-ts",
-        "uuid": "^3.1.0",
-        "webworker-threads": "^0.7.13"
+        "utilities-ts": "git+https://github.com/andnp/utilities-ts.git"
     },
     "devDependencies": {
-        "ava": "^0.21.0",
-        "nyc": "^11.1.0",
+        "ava": "^0.25.0",
         "pre-push": "^0.1.1",
-        "ts-node": "^3.3.0",
-        "typescript": "^2.6.0"
-    },
-    "nyc": {
-        "exclude": [
-            "src/plotters",
-            "tests",
-            "node_modules"
-        ]
+        "ts-node": "^7.0.0",
+        "typescript": "^3.0.0"
     },
     "ava": {
         "timeout": "1m",
@@ -55,7 +33,7 @@
     },
     "name": "tsplot",
     "version": "0.1.17",
-    "description": "A server-side plotting utility currently focused around phantomjs and plotly",
+    "description": "A server-side plotting utility currently focused around puppeteer and plotly",
     "main": "dist/src/index",
     "typings": "src/index",
     "repository": {
