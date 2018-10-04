@@ -3,6 +3,7 @@ export * from './utils/MathUtils';
 export * from './LinePlots';
 export * from './Heatmaps';
 export * from './utils/PlotlyCharts';
+export * from './utils/Color';
 
 import * as Remote_ from './plotters/RemotePlotter';
 import * as ObjectUtils_i from './utils/ObjectUtils';

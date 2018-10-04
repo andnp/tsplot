@@ -1,5 +1,6 @@
 {
     "scripts": {
+        "build": "tsc",
         "test": "tsc && NODE_PATH=\"dist/src/\" ava",
         "versionBump": "ts-node scripts/versionBump.ts"
     },

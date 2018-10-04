@@ -8,6 +8,7 @@ __export(require("./utils/MathUtils"));
 __export(require("./LinePlots"));
 __export(require("./Heatmaps"));
 __export(require("./utils/PlotlyCharts"));
+__export(require("./utils/Color"));
 const Remote_ = require("./plotters/RemotePlotter");
 const ObjectUtils_i = require("./utils/ObjectUtils");
 const DataBase_i = require("./DataBase");

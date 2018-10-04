@@ -1,116 +1,117 @@
 import * as Plotly from 'plotly.js';
 import * as _ from 'lodash';
+import { fp } from 'utilities-ts';
 import * as PlotlyCharts from './utils/PlotlyCharts';
 import * as MatrixUtils from './utils/MatrixUtils';
+import { Color } from './utils/Color';
+import { Layout_t } from './utils/PlotlyCharts';
 
-const color_palette = [
-    [57, 106, 177],
-    [218, 124, 48],
-    [62, 150, 81],
-    [204, 37, 41],
-    [83, 81, 84],
-    [107, 76, 154],
-    [146, 36, 40],
-    [148, 139, 61]
-];
-
-let colorIndex = 0;
-const getColor = () => color_palette[colorIndex++ % color_palette.length];
-
-export interface Line_t extends Partial<PlotlyCharts.Trace_t> {
+export interface LineTrace extends Partial<PlotlyCharts.Trace_t> {
     type: 'scatter';
     mode: 'lines';
     x: Array<number>;
     y: Array<number>;
     line: {
-        color: string;
+        color?: string;
         shape: 'linear' | 'spline';
     };
-    fill: "tozeroy";
-    fillcolor: string;
+    fill?: "tozeroy";
+    fillcolor?: string;
 };
 
-const getLineObject = (x: Array<number>, y: Array<number>, options?: Partial<PlotlyCharts.Trace_t>) : Line_t => {
-    const [r, g, b] = options && options.line && options.line.color ? [0, 0, 0] : getColor();
-    return _.mergeWith({
-        type: 'scatter',
-        mode: 'lines',
-        x, y,
-        line: {
-            width: 1,
-            color: `rgb(${r}, ${g}, ${b})`,
-            shape: 'spline'
+export class LineChart extends PlotlyCharts.Chart {
+    trace: LineTrace[];
+    constructor(trace: Partial<PlotlyCharts.Trace_t>, layout?: Partial<Layout_t>) {
+        super([], layout);
+
+        const min = _.min(trace.y) || 0;
+        const max = _.max(trace.y) || 1;
+
+        // set necessary parts of trace for this to be a line
+        this.trace = [{
+            x: [],
+            y: [],
+            ...trace,
+            type: 'scatter',
+            mode: 'lines',
+            line: {
+                shape: 'spline',
+                ...trace.line,
+            },
+        }];
+
+        // set opinionated layout defaults for line plots
+        this.layout = _.merge<Layout_t, Layout_t | undefined>({
+            xaxis: {
+                showgrid: false,
+                zeroline: false,
+                showline: true,
+            },
+            yaxis: {
+                range: [min - .1 * min, max + .1 * max],
+                showline: true,
+                zeroline: false,
+            },
+            margin: {
+                l: 60, b: 40, r: 40, t: 40,
+            },
+            showlegend: false,
+        }, layout);
+    }
+
+    getLineTrace() { return this.trace[0]; }
+    getSteTrace(): LineTrace | undefined { return this.trace[1]; }
+    getColor() { return this.getLineTrace().line.color; }
+
+    setColor(c: Color) {
+        this.getLineTrace().line.color = c.toRGBString();
+
+        const steTrace = this.getSteTrace();
+        if (steTrace) {
+            steTrace.line.color = c.toRGBAString(.1);
+            steTrace.fillcolor = c.toRGBAString(.2);
         }
-    }, options);
-};
+    }
 
-const getLineLayout = (min: number, max: number, options?: Partial<PlotlyCharts.Layout_t>) : PlotlyCharts.Layout_t => {
-    return _.mergeWith({
-        xaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: true
-        },
-        yaxis: {
-            range: [min - .1 * min, max + .1 * max],
-            showline: true,
-            zeroline: false
-        },
-        margin: {
-            l: 60, b: 40, r: 40, t: 40
-        },
-        showlegend: false
-    }, options);
-};
+    editLayout(layout: Partial<Layout_t>) {
+        this.layout = _.merge(this.layout, layout);
+        return this;
+    }
 
-export function generateLinePlot(array: Array<number>, options?: PlotlyCharts.Chart) {
-    const x = _.times(array.length, (i: number) => i);
-    const y = array;
+    showLegend() {
+        this.editLayout({ showlegend: true, legend: { orientation: 'h' } });
+    }
 
-    // There's no way these should be undefined, but their typings imply that they might be
-    const min = _.min(y) || 0;
-    const max = _.max(y) || 10;
+    static fromArray(arr: number[]) {
+        const x = _.times(arr.length, i => i);
+        const y = arr;
 
-    const trace = getLineObject(x, y, options && options.trace[0]);
-    const layout = getLineLayout(min, max, options && options.layout);
+        return new LineChart({ x, y });
+    }
 
-    return new PlotlyCharts.Chart([trace], layout, options && options.name);
-}
+    static fromArrayStats(arr: MatrixUtils.ArrayStats[]) {
+        const linePlot = this.fromArray(arr.map(fp.prop('mean')));
 
-export function generateLinePlot_ste(array: Array<MatrixUtils.ArrayStats>, options: PlotlyCharts.Chart) {
-    const x = _.times(array.length, (i: number) => i);
-    const y = array.map((a) => a.mean);
+        const { x, y } = linePlot.getLineTrace();
 
-    // There's no way these should be undefined, but their typings imply that they might be
-    const min = _.min(y) || 0;
-    const max = _.max(y) || 10;
+        const ste_x = [...x, ..._.reverse([...x])];
+        const ste_y = [];
 
-    if (!options.trace[0]) options.trace[0] = {};
-    options.trace[0].name = options.name;
+        for (let i = 0; i < y.length; ++i) ste_y.push(y[i] - (arr[i].stderr || 0));
+        for (let i = y.length - 1; i >= 0; --i) ste_y.push(y[i] + (arr[i].stderr || 0));
 
-    const trace = getLineObject(x, y, options.trace[0]);
+        const stePlot = this.fromArray(ste_y);
+        stePlot.trace[0] = {
+            ...stePlot.trace[0],
+            x: ste_x,
+            line: {
+                shape: 'linear',
+            },
+            fill: 'tozeroy',
+            showlegend: false,
+        };
 
-    const ste_x = [...x, ..._.reverse([...x])];
-    const ste_y = [];
-
-    for (let i = 0; i < y.length; ++i) ste_y.push(y[i] - (array[i].stderr || 0));
-    for (let i = y.length - 1; i >= 0; --i) ste_y.push(y[i] + (array[i].stderr || 0));
-
-    colorIndex--;
-    const [r, g, b] = getColor();
-    colorIndex--;
-    const ste_trace = getLineObject(ste_x, ste_y, {});
-    ste_trace.line.color = "transparent";
-    ste_trace.fill = "tozeroy";
-    ste_trace.fillcolor = `rgba(${r}, ${g}, ${b}, 0.2)`;
-    ste_trace.showlegend = false;
-
-    const layout = getLineLayout(min, max, _.merge({
-        showlegend: true,
-        legend: {
-            orientation: "h"
-        }
-    }, options.layout));
-
-    return new PlotlyCharts.Chart([trace, ste_trace], layout, options.name);
+        linePlot.trace.push(stePlot.trace[0]);
+        return linePlot;
+    }
 }

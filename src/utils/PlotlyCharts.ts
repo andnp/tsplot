@@ -21,7 +21,7 @@ export class Chart {
     public trace: Array<Partial<Trace_t>>;
     public name: string;
 
-    constructor(trace?: Array<Trace_t>, layout?: Layout_t, name?: string) {
+    constructor(trace?: Trace_t[], layout?: Layout_t, name?: string) {
         this.layout = layout || {};
         this.trace = trace || [];
         this.name = name || 'default_name';
