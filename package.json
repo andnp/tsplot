@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "tsc",
+        "build": "rm -rf dist && tsc",
         "test": "tsc && NODE_PATH=\"dist/src/\" ava",
         "versionBump": "ts-node scripts/versionBump.ts",
         "watch": "tsc --watch"
