@@ -16,6 +16,11 @@ export class Color {
         return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
 
+    darken(x: number) {
+        const rgb = this.rgb.map(v => v - (x * v)) as [number, number, number];
+        return new Color(rgb);
+    }
+
     static fromRGBString(str: string) {
         const nums = str.replace('rgb(', '')
             .replace(')', '')
@@ -58,13 +63,115 @@ export class Palette {
     }
 }
 
-export const createStandardPalette = () => new Palette([
-    new Color([57, 106, 177]),
-    new Color([218, 124, 48]),
-    new Color([62, 150, 81]),
-    new Color([204, 37, 41]),
-    new Color([83, 81, 84]),
-    new Color([107, 76, 154]),
-    new Color([146, 36, 40]),
-    new Color([148, 139, 61])
-]);
+export const createStandardPalette = (colors: number = 12) => {
+    if (colors === 2) return new Palette([
+        new Color([20, 20, 20]),
+        new Color([230, 230, 230]),
+    ]);
+
+    if (colors === 3) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+    ]);
+
+    if (colors === 4) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+        new Color([231, 41, 138]),
+    ]);
+
+    if (colors === 5) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+        new Color([231, 41, 138]),
+        new Color([102, 166, 30]),
+    ]);
+
+    if (colors === 6) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+        new Color([231, 41, 138]),
+        new Color([102, 166, 30]),
+        new Color([230, 171, 2]),
+    ]);
+
+    if (colors === 7) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+        new Color([231, 41, 138]),
+        new Color([102, 166, 30]),
+        new Color([230, 171, 2]),
+        new Color([166, 118, 29]),
+    ]);
+
+    if (colors === 8) return new Palette([
+        new Color([27, 158, 119]),
+        new Color([217, 95, 2]),
+        new Color([117, 112, 179]),
+        new Color([231, 41, 138]),
+        new Color([102, 166, 30]),
+        new Color([230, 171, 2]),
+        new Color([166, 118, 29]),
+        new Color([102, 102, 102]),
+    ]);
+
+    if (colors === 9) return new Palette([
+        new Color([166, 206, 227]),
+        new Color([31, 120, 180]),
+        new Color([178, 223, 138]),
+        new Color([51, 160, 44]),
+        new Color([251, 154, 153]),
+        new Color([227, 26, 28]),
+        new Color([253, 191, 111]),
+        new Color([255, 127, 0]),
+        new Color([202, 178, 214]),
+    ]);
+
+    if (colors === 10) return new Palette([
+        new Color([166, 206, 227]),
+        new Color([31, 120, 180]),
+        new Color([178, 223, 138]),
+        new Color([51, 160, 44]),
+        new Color([251, 154, 153]),
+        new Color([227, 26, 28]),
+        new Color([253, 191, 111]),
+        new Color([255, 127, 0]),
+        new Color([202, 178, 214]),
+        new Color([106, 61, 154]),
+    ]);
+
+    if (colors === 11) return new Palette([
+        new Color([166, 206, 227]),
+        new Color([31, 120, 180]),
+        new Color([178, 223, 138]),
+        new Color([51, 160, 44]),
+        new Color([251, 154, 153]),
+        new Color([227, 26, 28]),
+        new Color([253, 191, 111]),
+        new Color([255, 127, 0]),
+        new Color([202, 178, 214]),
+        new Color([106, 61, 154]),
+        new Color([255, 255, 153]),
+    ]);
+
+    return new Palette([
+        new Color([166, 206, 227]),
+        new Color([31, 120, 180]),
+        new Color([178, 223, 138]),
+        new Color([51, 160, 44]),
+        new Color([251, 154, 153]),
+        new Color([227, 26, 28]),
+        new Color([253, 191, 111]),
+        new Color([255, 127, 0]),
+        new Color([202, 178, 214]),
+        new Color([106, 61, 154]),
+        new Color([255, 255, 153]),
+        new Color([177, 89, 40]),
+    ]);
+}
+

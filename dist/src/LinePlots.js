@@ -9,6 +9,7 @@ class LineChart extends PlotlyCharts.Chart {
         super([], layout);
         const min = _.min(trace.y) || 0;
         const max = _.max(trace.y) || 1;
+        const range = Math.abs(max - min);
         // set necessary parts of trace for this to be a line
         this.trace = [Object.assign({ x: [], y: [] }, trace, { type: 'scatter', mode: 'lines', line: Object.assign({ shape: 'spline' }, trace.line) })];
         // set opinionated layout defaults for line plots
@@ -19,14 +20,19 @@ class LineChart extends PlotlyCharts.Chart {
                 showline: true,
             },
             yaxis: {
-                range: [min - .1 * min, max + .1 * max],
+                range: [min - .05 * range, max + .05 * range],
                 showline: true,
                 zeroline: false,
+                dtick: (range / 3).toPrecision(1),
             },
             margin: {
-                l: 60, b: 40, r: 40, t: 40,
+                l: 80, b: 40, r: 40, t: 40,
             },
             showlegend: false,
+            font: {
+                size: 20,
+                family: 'Times New Roman',
+            },
         }, layout);
     }
     getLineTrace() { return this.trace[0]; }
@@ -45,6 +51,10 @@ class LineChart extends PlotlyCharts.Chart {
         const steTrace = this.getSteTrace();
         if (steTrace)
             steTrace.x = steXValues(x);
+    }
+    label(name) {
+        this.getLineTrace().name = name;
+        this.showLegend();
     }
     editLayout(layout) {
         this.layout = _.merge(this.layout, layout);
