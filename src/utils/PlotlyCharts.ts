@@ -81,7 +81,8 @@ export function combineTraces(plots: Array<Chart>, name: string): Chart {
             range: [xmin, xmax]
         },
         yaxis: {
-            range: [ymin, ymax]
+            range: [ymin, ymax],
+            dtick: (Math.abs(ymax - ymin) / 3).toPrecision(1),
         }
     };
 

@@ -58,7 +58,8 @@ function combineTraces(plots, name) {
             range: [xmin, xmax]
         },
         yaxis: {
-            range: [ymin, ymax]
+            range: [ymin, ymax],
+            dtick: (Math.abs(ymax - ymin) / 3).toPrecision(1),
         }
     };
     return new Chart(traces, _.merge(plots[0].layout, layout), name);

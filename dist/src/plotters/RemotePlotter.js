@@ -22,6 +22,7 @@ async function plot(chart) {
             const el = document.createElement('div');
             document.body.appendChild(el);
             el.style.width = '700px';
+            el.style.paddingTop = '25px';
             const trace_arr = Array.isArray(trace) ? trace : [trace];
             // @ts-ignore
             return Plotly.plot(el, trace_arr, layout, { showLink: false });

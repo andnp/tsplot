@@ -56,7 +56,7 @@ export class LineChart extends PlotlyCharts.Chart {
                 dtick: (range / 3).toPrecision(1),
             },
             margin: {
-                l: 80, b: 40, r: 40, t: 40,
+                l: 80, b: 60, r: 40, t: 40,
             },
             showlegend: false,
             font: {
@@ -99,7 +99,7 @@ export class LineChart extends PlotlyCharts.Chart {
     }
 
     showLegend() {
-        this.editLayout({ showlegend: true, legend: { orientation: 'h' } });
+        this.editLayout({ showlegend: true, legend: { orientation: 'v', yanchor: 'top', xanchor: 'right' } });
     }
 
     static fromArray(arr: number[]) {

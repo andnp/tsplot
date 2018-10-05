@@ -29,6 +29,7 @@ export async function plot(chart: Chart | Chart[]) {
             document.body.appendChild(el);
 
             el.style.width = '700px';
+            el.style.paddingTop = '25px';
 
             const trace_arr = Array.isArray(trace) ? trace : [trace];
             // @ts-ignore
