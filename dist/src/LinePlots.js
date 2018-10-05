@@ -44,7 +44,7 @@ class LineChart extends PlotlyCharts.Chart {
         this.getLineTrace().x = x;
         const steTrace = this.getSteTrace();
         if (steTrace)
-            steTrace.x = x;
+            steTrace.x = steXValues(x);
     }
     editLayout(layout) {
         this.layout = _.merge(this.layout, layout);
@@ -61,7 +61,7 @@ class LineChart extends PlotlyCharts.Chart {
     static fromArrayStats(arr) {
         const linePlot = this.fromArray(arr.map(utilities_ts_1.fp.prop('mean')));
         const { x, y } = linePlot.getLineTrace();
-        const ste_x = [...x, ..._.reverse([...x])];
+        const ste_x = steXValues(x);
         const ste_y = [];
         for (let i = 0; i < y.length; ++i)
             ste_y.push(y[i] - (arr[i].stderr || 0));
@@ -76,3 +76,6 @@ class LineChart extends PlotlyCharts.Chart {
     }
 }
 exports.LineChart = LineChart;
+function steXValues(x) {
+    return [...x, ..._.reverse([...x])];
+}
