@@ -18,7 +18,7 @@ export interface Layout_t extends Partial<Plotly.Layout> { };
 
 export class Chart {
     public layout: Partial<Layout_t>;
-    public trace: Array<Partial<Trace_t>>;
+    public trace: Array<Trace_t>;
     public name: string;
 
     constructor(trace?: Trace_t[], layout?: Layout_t, name?: string) {
@@ -26,10 +26,35 @@ export class Chart {
         this.trace = trace || [];
         this.name = name || 'default_name';
     };
+
+    title(name: string) {
+        this.layout.title = name;
+        return this;
+    }
+
+    xLabel(name: string) {
+        if (!this.layout.xaxis) {
+            this.layout.xaxis = { title: name };
+        } else {
+            this.layout.xaxis.title = name;
+        }
+
+        return this;
+    }
+
+    yLabel(name: string) {
+        if (!this.layout.yaxis) {
+            this.layout.yaxis = { title: name };
+        } else {
+            this.layout.yaxis.title = name;
+        }
+
+        return this;
+    }
 }
 
-export function combineTraces(plots: Array<Chart>, name: string) {
-    let traces: Array<Partial<Trace_t>> = [];
+export function combineTraces(plots: Array<Chart>, name: string): Chart {
+    let traces: Array<Trace_t> = [];
     plots.forEach((plot) => {
         traces = traces.concat(plot.trace)
     });
@@ -60,11 +85,9 @@ export function combineTraces(plots: Array<Chart>, name: string) {
         }
     };
 
-    const plot = {
-        layout: _.merge(plots[0].layout, layout),
-        trace: traces,
-        name
-    };
-
-    return plot;
+    return new Chart(
+        traces,
+        _.merge(plots[0].layout, layout),
+        name,
+    );
 }
