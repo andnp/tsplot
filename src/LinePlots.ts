@@ -73,6 +73,13 @@ export class LineChart extends PlotlyCharts.Chart {
         }
     }
 
+    setXValues(x: number[]) {
+        this.getLineTrace().x = x;
+
+        const steTrace = this.getSteTrace();
+        if (steTrace) steTrace.x = x;
+    }
+
     editLayout(layout: Partial<Layout_t>) {
         this.layout = _.merge(this.layout, layout);
         return this;

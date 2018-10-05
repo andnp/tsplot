@@ -40,6 +40,12 @@ class LineChart extends PlotlyCharts.Chart {
             steTrace.fillcolor = c.toRGBAString(.2);
         }
     }
+    setXValues(x) {
+        this.getLineTrace().x = x;
+        const steTrace = this.getSteTrace();
+        if (steTrace)
+            steTrace.x = x;
+    }
     editLayout(layout) {
         this.layout = _.merge(this.layout, layout);
         return this;
