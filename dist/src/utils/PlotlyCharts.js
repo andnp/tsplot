@@ -32,6 +32,15 @@ class Chart {
         }
         return this;
     }
+    logXAxis() {
+        if (!this.layout.xaxis) {
+            this.layout.xaxis = { type: 'log' };
+        }
+        else {
+            this.layout.xaxis.type = 'log';
+        }
+        return this;
+    }
 }
 exports.Chart = Chart;
 function combineTraces(plots, name) {

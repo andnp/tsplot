@@ -51,6 +51,16 @@ export class Chart {
 
         return this;
     }
+
+    logXAxis() {
+        if (!this.layout.xaxis) {
+            this.layout.xaxis = { type: 'log' };
+        } else {
+            this.layout.xaxis.type = 'log';
+        }
+
+        return this;
+    }
 }
 
 export function combineTraces(plots: Array<Chart>, name: string): Chart {
