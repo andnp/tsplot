@@ -1,8 +1,11 @@
 import * as puppeteer from 'puppeteer';
-import { files, promise } from 'utilities-ts';
+import * as _ from 'lodash';
+import { files, promise, Matrix } from 'utilities-ts';
 import { Chart } from '../utils/PlotlyCharts';
 
-export async function plot(chart: Chart | Chart[]) {
+// memoize this so that later calls to plot and displayImage
+// will modify the same browser page
+const launchBrowser = _.once(async () => {
     const browser = await puppeteer.launch({ headless: false, args: [`--window-size=1920,1080`] });
     const [ page ] = await browser.pages();
 
@@ -18,6 +21,12 @@ export async function plot(chart: Chart | Chart[]) {
 
     await page.evaluate(d3.toString());
     await page.evaluate(plotly.toString());
+
+    return page;
+});
+
+export async function plot(chart: Chart | Chart[]) {
+    const page = await launchBrowser();
 
     const charts = Array.isArray(chart) ? chart : [chart];
 
@@ -36,4 +45,38 @@ export async function plot(chart: Chart | Chart[]) {
             return Plotly.plot(el, trace_arr, layout, { showLink: false });
         }, trace, layout);
     })
+}
+
+const matrixToImageVec = (m: Matrix) => {
+    const x = [] as number[];
+
+    for (let i = 0; i < m.rows; ++i) {
+        for (let j = 0; j < m.cols; ++j) {
+            const v = m.get(i, j);
+            x.push(v); // r
+            x.push(v); // b
+            x.push(v); // g
+            x.push(255); // a
+        }
+    }
+
+    return x;
+}
+
+export async function displayImage(m: Matrix) {
+    const page = await launchBrowser();
+
+    const imageVec = matrixToImageVec(m);
+
+    await page.evaluate((imageVec, rows, cols) => {
+        const el = document.createElement('canvas');
+        document.body.appendChild(el);
+        const ctx = el.getContext('2d')!;
+
+        const d = ctx.createImageData(cols, rows);
+        for (let i = 0; i < imageVec.length; ++i) {
+            d.data[i] = imageVec[i];
+        }
+        ctx.putImageData(d, 0, 0);
+    }, imageVec, m.rows, m.cols);
 }
