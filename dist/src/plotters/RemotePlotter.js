@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer = require("puppeteer");
+const _ = require("lodash");
 const utilities_ts_1 = require("utilities-ts");
-async function plot(chart) {
+// memoize this so that later calls to plot and displayImage
+// will modify the same browser page
+const launchBrowser = _.once(async () => {
     const browser = await puppeteer.launch({ headless: false, args: [`--window-size=1920,1080`] });
     const [page] = await browser.pages();
     await page.setViewport({
@@ -15,6 +18,10 @@ async function plot(chart) {
     const plotly = await utilities_ts_1.files.readFile(plotly_path);
     await page.evaluate(d3.toString());
     await page.evaluate(plotly.toString());
+    return page;
+});
+async function plot(chart) {
+    const page = await launchBrowser();
     const charts = Array.isArray(chart) ? chart : [chart];
     await utilities_ts_1.promise.map(charts, chart => {
         const { trace, layout } = chart;
@@ -30,3 +37,31 @@ async function plot(chart) {
     });
 }
 exports.plot = plot;
+const matrixToImageVec = (m) => {
+    const x = [];
+    for (let i = 0; i < m.rows; ++i) {
+        for (let j = 0; j < m.cols; ++j) {
+            const v = m.get(i, j);
+            x.push(v); // r
+            x.push(v); // b
+            x.push(v); // g
+            x.push(255); // a
+        }
+    }
+    return x;
+};
+async function displayImage(m) {
+    const page = await launchBrowser();
+    const imageVec = matrixToImageVec(m);
+    await page.evaluate((imageVec, rows, cols) => {
+        const el = document.createElement('canvas');
+        document.body.appendChild(el);
+        const ctx = el.getContext('2d');
+        const d = ctx.createImageData(cols, rows);
+        for (let i = 0; i < imageVec.length; ++i) {
+            d.data[i] = imageVec[i];
+        }
+        ctx.putImageData(d, 0, 0);
+    }, imageVec, m.rows, m.cols);
+}
+exports.displayImage = displayImage;
