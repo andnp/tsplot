@@ -24,5 +24,5 @@ plot.setColor(black);
     ]);
 
     await Remote.displayImage(m);
-    await Remote.plot(plot);
+    // await Remote.plot(plot);
 })()

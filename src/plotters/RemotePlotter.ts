@@ -71,6 +71,8 @@ export async function displayImage(m: Matrix) {
     await page.evaluate((imageVec, rows, cols) => {
         const el = document.createElement('canvas');
         document.body.appendChild(el);
+        el.height = rows;
+        el.width = cols;
         const ctx = el.getContext('2d')!;
 
         const d = ctx.createImageData(cols, rows);
@@ -78,5 +80,9 @@ export async function displayImage(m: Matrix) {
             d.data[i] = imageVec[i];
         }
         ctx.putImageData(d, 0, 0);
+
+        el.style.height = `${rows * 5}px`;
+        el.style.width = `${cols * 5}px`;
+
     }, imageVec, m.rows, m.cols);
 }
