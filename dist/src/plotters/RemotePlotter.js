@@ -54,8 +54,11 @@ async function displayImage(m) {
     const page = await launchBrowser();
     const imageVec = matrixToImageVec(m);
     await page.evaluate((imageVec, rows, cols) => {
+        const container = document.createElement('div');
+        container.style.width = '100%';
         const el = document.createElement('canvas');
-        document.body.appendChild(el);
+        container.appendChild(el);
+        document.body.appendChild(container);
         el.height = rows;
         el.width = cols;
         const ctx = el.getContext('2d');
