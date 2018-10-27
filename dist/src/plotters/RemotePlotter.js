@@ -50,12 +50,18 @@ const matrixToImageVec = (m) => {
     }
     return x;
 };
-async function displayImage(m) {
+async function displayImage(m, opts) {
+    const o = _.merge({
+        label: '',
+    }, opts);
     const page = await launchBrowser();
     const imageVec = matrixToImageVec(m);
-    await page.evaluate((imageVec, rows, cols) => {
+    await page.evaluate((imageVec, rows, cols, o) => {
         const container = document.createElement('div');
         container.style.width = '100%';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'row';
+        container.style.alignItems = 'center';
         const el = document.createElement('canvas');
         container.appendChild(el);
         document.body.appendChild(container);
@@ -69,6 +75,11 @@ async function displayImage(m) {
         ctx.putImageData(d, 0, 0);
         el.style.height = `${rows * 5}px`;
         el.style.width = `${cols * 5}px`;
-    }, imageVec, m.rows, m.cols);
+        const labelEl = document.createElement('div');
+        labelEl.style.paddingLeft = '10px';
+        labelEl.style.fontSize = '20px';
+        labelEl.innerText = o.label;
+        container.appendChild(labelEl);
+    }, imageVec, m.rows, m.cols, o);
 }
 exports.displayImage = displayImage;

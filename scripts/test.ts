@@ -23,6 +23,7 @@ plot.setColor(black);
         [255, 255, 0, 0, 255, 255],
     ]);
 
+    await Remote.displayImage(m, { label: 'hey there' });
     await Remote.displayImage(m);
     // await Remote.plot(plot);
 })()

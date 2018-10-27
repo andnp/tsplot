@@ -63,14 +63,25 @@ const matrixToImageVec = (m: Matrix) => {
     return x;
 }
 
-export async function displayImage(m: Matrix) {
+interface DisplayImageOptions {
+    label: string;
+}
+
+export async function displayImage(m: Matrix, opts?: Partial<DisplayImageOptions>) {
+    const o: DisplayImageOptions = _.merge({
+        label: '',
+    }, opts);
+
     const page = await launchBrowser();
 
     const imageVec = matrixToImageVec(m);
 
-    await page.evaluate((imageVec, rows, cols) => {
+    await page.evaluate((imageVec, rows, cols, o: DisplayImageOptions) => {
         const container = document.createElement('div');
         container.style.width = '100%';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'row';
+        container.style.alignItems = 'center';
         const el = document.createElement('canvas');
         container.appendChild(el);
         document.body.appendChild(container);
@@ -88,5 +99,11 @@ export async function displayImage(m: Matrix) {
         el.style.height = `${rows * 5}px`;
         el.style.width = `${cols * 5}px`;
 
-    }, imageVec, m.rows, m.cols);
+        const labelEl = document.createElement('div');
+        labelEl.style.paddingLeft = '10px';
+        labelEl.style.fontSize = '20px';
+        labelEl.innerText = o.label;
+        container.appendChild(labelEl);
+
+    }, imageVec, m.rows, m.cols, o);
 }
