@@ -53,13 +53,16 @@ class Palette {
     current() {
         return this.colors[this.state];
     }
+    reset() {
+        this.state = 0;
+    }
 }
 exports.Palette = Palette;
 exports.createStandardPalette = (colors = 12) => {
     if (colors === 2)
         return new Palette([
-            new Color([20, 20, 20]),
-            new Color([230, 230, 230]),
+            new Color([27, 158, 119]),
+            new Color([217, 95, 2]),
         ]);
     if (colors === 3)
         return new Palette([
