@@ -29,6 +29,7 @@ class LineChart extends PlotlyCharts.Chart {
                 l: 80, b: 60, r: 40, t: 40,
             },
             showlegend: false,
+            legend: { bgcolor: 'transparent' },
             font: {
                 size: 20,
                 family: 'Times New Roman',
