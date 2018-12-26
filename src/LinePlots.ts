@@ -103,6 +103,11 @@ export class LineChart extends PlotlyCharts.Chart {
         this.editLayout({ showlegend: true, legend: { orientation: 'v', yanchor: 'top', xanchor: 'right' } });
     }
 
+    smooth(v: boolean) {
+        this.trace.forEach(trace => trace.line.shape = v ? 'spline' : 'linear');
+        return this;
+    }
+
     static fromArray(arr: number[]) {
         const x = _.times(arr.length, i => i);
         const y = arr;

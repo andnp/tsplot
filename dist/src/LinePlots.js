@@ -64,6 +64,10 @@ class LineChart extends PlotlyCharts.Chart {
     showLegend() {
         this.editLayout({ showlegend: true, legend: { orientation: 'v', yanchor: 'top', xanchor: 'right' } });
     }
+    smooth(v) {
+        this.trace.forEach(trace => trace.line.shape = v ? 'spline' : 'linear');
+        return this;
+    }
     static fromArray(arr) {
         const x = _.times(arr.length, i => i);
         const y = arr;
