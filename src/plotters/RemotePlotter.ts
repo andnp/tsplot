@@ -30,7 +30,7 @@ export async function plot(chart: Chart | Chart[]) {
 
     const charts = Array.isArray(chart) ? chart : [chart];
 
-    await promise.map(charts, chart => {
+    return promise.map(charts, chart => {
         const { trace, layout } = chart;
 
         return page.evaluate((trace: any, layout: any) => {
@@ -42,9 +42,12 @@ export async function plot(chart: Chart | Chart[]) {
 
             const trace_arr = Array.isArray(trace) ? trace : [trace];
             // @ts-ignore
-            return Plotly.plot(el, trace_arr, layout, { showLink: false });
+            return Plotly.plot(el, trace_arr, layout, { showLink: false })
+            // @ts-ignore
+                .then((gd) => Plotly.toImage(gd, { format: 'svg', height: el.clientHeight, width: el.clientWidth }))
+                .then(str => decodeURIComponent(str));
         }, trace, layout);
-    })
+    });
 }
 
 const matrixToImageVec = (m: Matrix) => {

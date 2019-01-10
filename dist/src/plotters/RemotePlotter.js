@@ -23,7 +23,7 @@ const launchBrowser = _.once(async () => {
 async function plot(chart) {
     const page = await launchBrowser();
     const charts = Array.isArray(chart) ? chart : [chart];
-    await utilities_ts_1.promise.map(charts, chart => {
+    return utilities_ts_1.promise.map(charts, chart => {
         const { trace, layout } = chart;
         return page.evaluate((trace, layout) => {
             const el = document.createElement('div');
@@ -32,7 +32,10 @@ async function plot(chart) {
             el.style.paddingTop = '25px';
             const trace_arr = Array.isArray(trace) ? trace : [trace];
             // @ts-ignore
-            return Plotly.plot(el, trace_arr, layout, { showLink: false });
+            return Plotly.plot(el, trace_arr, layout, { showLink: false })
+                // @ts-ignore
+                .then((gd) => Plotly.toImage(gd, { format: 'svg', height: el.clientHeight, width: el.clientWidth }))
+                .then(str => decodeURIComponent(str));
         }, trace, layout);
     });
 }
