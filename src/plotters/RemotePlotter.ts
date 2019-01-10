@@ -45,7 +45,7 @@ export async function plot(chart: Chart | Chart[]) {
             return Plotly.plot(el, trace_arr, layout, { showLink: false })
             // @ts-ignore
                 .then((gd) => Plotly.toImage(gd, { format: 'svg', height: el.clientHeight, width: el.clientWidth }))
-                .then(str => decodeURIComponent(str));
+                .then(str => decodeURIComponent(str.replace('data:image/svg+xml,', '')));
         }, trace, layout);
     });
 }
