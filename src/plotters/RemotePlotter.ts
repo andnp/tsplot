@@ -46,7 +46,7 @@ export async function plot(chart: Chart | Chart[]) {
             // @ts-ignore
                 .then((gd) => Plotly.toImage(gd, { format: 'svg', height: el.clientHeight, width: el.clientWidth }))
                 .then(str => decodeURIComponent(str.replace('data:image/svg+xml,', '')));
-        }, trace, layout);
+        }, trace as any, layout as any);
     });
 }
 
@@ -108,5 +108,5 @@ export async function displayImage(m: Matrix, opts?: Partial<DisplayImageOptions
         labelEl.innerText = o.label;
         container.appendChild(labelEl);
 
-    }, imageVec, m.rows, m.cols, o);
+    }, imageVec, m.rows, m.cols, o as any);
 }
