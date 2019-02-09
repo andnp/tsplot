@@ -130,6 +130,5 @@ export function combineTraces(plots: Array<Chart>): Chart {
     return new Chart(
         traces,
         _.merge(plots[0].layout, layout),
-        name,
     );
 }
