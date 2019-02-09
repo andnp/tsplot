@@ -106,7 +106,7 @@ exports.createSequentialPalette = (colors = 9) => {
     ];
     return new Palette(rawPalette.slice(0, colors));
 };
-exports.createDivergingPalette = (colors = 1) => {
+exports.createDivergingPalette = (colors = 11) => {
     const rawPalette = [
         new Color([84, 48, 5]),
         new Color([140, 81, 10]),
