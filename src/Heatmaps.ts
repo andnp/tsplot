@@ -7,6 +7,8 @@ export interface HeatmapTrace extends Partial<Trace> {
     type: 'heatmap';
     z: Array<Array<number>>;
     colorscale?: Array<[number, string]>;
+    zmin?: number;
+    zmax?: number;
 };
 
 export class Heatmap extends Chart {
@@ -29,6 +31,13 @@ export class Heatmap extends Chart {
         });
 
         this.trace[0].colorscale = colors;
+
+        return this;
+    }
+
+    range(min: number, max: number) {
+        this.trace[0].zmin = min;
+        this.trace[0].zmax = max;
 
         return this;
     }

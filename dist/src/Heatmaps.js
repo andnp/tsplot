@@ -19,6 +19,11 @@ class Heatmap extends PlotlyCharts_1.Chart {
         this.trace[0].colorscale = colors;
         return this;
     }
+    range(min, max) {
+        this.trace[0].zmin = min;
+        this.trace[0].zmax = max;
+        return this;
+    }
     static fromMatrix(m) {
         return new Heatmap({
             z: m.asArrays(),
