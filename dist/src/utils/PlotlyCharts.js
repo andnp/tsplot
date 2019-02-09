@@ -1,22 +1,10 @@
-import * as Plotly from 'plotly.js';
-import * as _ from 'lodash';
-
-export interface Trace {
-    name?: string;
-    line?: {
-        color?: string;
-    };
-}
-
-export interface Layout extends Partial<Plotly.Layout> { };
-
-export class Chart {
-    public layout: Partial<Layout>;
-    public trace: Array<Trace>;
-
-    constructor(trace?: Trace[], layout?: Layout, name?: string) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const _ = require("lodash");
+;
+class Chart {
+    constructor(trace, layout, name) {
         this.trace = trace || [];
-
         this.layout = _.merge({
             xaxis: {
                 ticks: '',
@@ -39,85 +27,74 @@ export class Chart {
                 family: 'Times New Roman',
             },
         }, layout);
-    };
-
-    label(name: string) {
+    }
+    ;
+    label(name) {
         this.trace[0].name = name;
-
         this.showLegend();
         return this;
     }
-
-    editLayout(layout: Partial<Layout>) {
+    editLayout(layout) {
         this.layout = _.merge(this.layout, layout);
         return this;
     }
-
     showLegend() {
         this.editLayout({ showlegend: true, legend: { orientation: 'v', yanchor: 'top', xanchor: 'right' } });
         return this;
     }
-
-    title(name: string) {
+    title(name) {
         this.layout.title = name;
         return this;
     }
-
-    xLabel(name: string) {
+    xLabel(name) {
         if (!this.layout.xaxis) {
             this.layout.xaxis = { title: name };
-        } else {
+        }
+        else {
             this.layout.xaxis.title = name;
         }
-
         return this;
     }
-
-    yLabel(name: string) {
+    yLabel(name) {
         if (!this.layout.yaxis) {
             this.layout.yaxis = { title: name };
-        } else {
+        }
+        else {
             this.layout.yaxis.title = name;
         }
-
         return this;
     }
-
     logXAxis() {
         if (!this.layout.xaxis) {
             this.layout.xaxis = { type: 'log' };
-        } else {
+        }
+        else {
             this.layout.xaxis.type = 'log';
         }
-
         return this;
     }
 }
-
-export function combineTraces(plots: Array<Chart>): Chart {
-    let traces: Array<Trace> = [];
+exports.Chart = Chart;
+function combineTraces(plots) {
+    let traces = [];
     plots.forEach((plot) => {
-        traces = traces.concat(plot.trace)
+        traces = traces.concat(plot.trace);
     });
-
     const xrange = _.filter(plots.map((plot) => {
         if (plot.layout.xaxis) {
             return plot.layout.xaxis.range;
         }
-    })) as [Plotly.Datum, Plotly.Datum][];
-
+    }));
     const yrange = _.filter(plots.map((plot) => {
         if (plot.layout.yaxis) {
             return plot.layout.yaxis.range;
         }
-    })) as [Plotly.Datum, Plotly.Datum][];
-
-    const xmin = _.min(xrange.map((range) => range[0])) as number;
-    const xmax = _.max(xrange.map((range) => range[1])) as number;
-    const ymin = _.min(yrange.map((range) => range[0])) as number;
-    const ymax = _.max(yrange.map((range) => range[1])) as number;
-
-    const layout: Layout = {
+    }));
+    const xmin = _.min(xrange.map((range) => range[0]));
+    const xmax = _.max(xrange.map((range) => range[1]));
+    const ymin = _.min(yrange.map((range) => range[0]));
+    const ymax = _.max(yrange.map((range) => range[1]));
+    const layout = {
         xaxis: {
             range: [xmin, xmax]
         },
@@ -126,10 +103,6 @@ export function combineTraces(plots: Array<Chart>): Chart {
             dtick: (Math.abs(ymax - ymin) / 3).toPrecision(1),
         }
     };
-
-    return new Chart(
-        traces,
-        _.merge(plots[0].layout, layout),
-        name,
-    );
+    return new Chart(traces, _.merge(plots[0].layout, layout), name);
 }
+exports.combineTraces = combineTraces;

@@ -1,11 +1,10 @@
 import * as _ from 'lodash';
 import { fp } from 'utilities-ts';
-import * as PlotlyCharts from './utils/PlotlyCharts';
 import * as MatrixUtils from './utils/MatrixUtils';
 import { Color } from './utils/Color';
-import { Layout_t } from './utils/PlotlyCharts';
+import { Layout, Trace, Chart } from './utils/PlotlyCharts';
 
-export interface LineTrace extends Partial<PlotlyCharts.Trace_t> {
+export interface LineTrace extends Partial<Trace> {
     type: 'scatter';
     mode: 'lines';
     x: Array<number>;
@@ -16,11 +15,12 @@ export interface LineTrace extends Partial<PlotlyCharts.Trace_t> {
     };
     fill?: "tozeroy";
     fillcolor?: string;
+    showlegend?: boolean;
 };
 
-export class LineChart extends PlotlyCharts.Chart {
+export class LineChart extends Chart {
     trace: LineTrace[];
-    constructor(trace: Partial<PlotlyCharts.Trace_t>, layout?: Partial<Layout_t>) {
+    constructor(trace: Partial<LineTrace>, layout?: Partial<Layout>) {
         super([], layout);
 
         const min = _.min(trace.y) || 0;
@@ -42,26 +42,10 @@ export class LineChart extends PlotlyCharts.Chart {
         }];
 
         // set opinionated layout defaults for line plots
-        this.layout = _.merge<Layout_t, Layout_t | undefined>({
-            xaxis: {
-                showgrid: false,
-                zeroline: false,
-                showline: true,
-            },
+        this.layout = _.merge({
             yaxis: {
                 range: [min - .05 * range, max + .05 * range],
-                showline: true,
-                zeroline: false,
                 dtick: (range / 3).toPrecision(1),
-            },
-            margin: {
-                l: 80, b: 60, r: 40, t: 40,
-            },
-            showlegend: false,
-            legend: { bgcolor: 'transparent' },
-            font: {
-                size: 20,
-                family: 'Times New Roman',
             },
         }, layout);
     }
@@ -85,21 +69,6 @@ export class LineChart extends PlotlyCharts.Chart {
 
         const steTrace = this.getSteTrace();
         if (steTrace) steTrace.x = steXValues(x);
-    }
-
-    label(name: string) {
-        this.getLineTrace().name = name;
-
-        this.showLegend();
-    }
-
-    editLayout(layout: Partial<Layout_t>) {
-        this.layout = _.merge(this.layout, layout);
-        return this;
-    }
-
-    showLegend() {
-        this.editLayout({ showlegend: true, legend: { orientation: 'v', yanchor: 'top', xanchor: 'right' } });
     }
 
     smooth(v: boolean) {

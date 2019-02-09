@@ -2,6 +2,7 @@ export * from './utils/MatrixUtils';
 export * from './utils/MathUtils';
 export * from './LinePlots';
 export * from './Heatmaps';
+export * from './Histogram';
 export * from './utils/PlotlyCharts';
 export * from './utils/Color';
 

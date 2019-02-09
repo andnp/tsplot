@@ -1,42 +1,47 @@
 import * as _ from 'lodash';
-import { Matrix } from 'utilities-ts';
-import * as PlotlyCharts from './utils/PlotlyCharts';
+import { Matrix, tuple } from 'utilities-ts';
+import { Layout, Trace, Chart } from './utils/PlotlyCharts';
+import { Palette, createSequentialPalette } from './utils/Color';
 
-export interface Heatmap_t extends Partial<PlotlyCharts.Trace_t> {
+export interface HeatmapTrace extends Partial<Trace> {
     type: 'heatmap';
     z: Array<Array<number>>;
+    colorscale?: Array<[number, string]>;
 };
 
-const getHeatmapObject = (z: Matrix, options: Partial<PlotlyCharts.Trace_t>): Heatmap_t => {
-    return _.mergeWith({
-        type: 'heatmap',
-        z: z.asArrays()
-    }, options);
-};
+export class Heatmap extends Chart {
+    trace: HeatmapTrace[];
+    constructor(trace: Partial<HeatmapTrace>, layout?: Partial<Layout>) {
+        super([], layout);
 
-const getHeatmapLayout = (options: Partial<PlotlyCharts.Layout_t>): PlotlyCharts.Layout_t => {
-    return _.merge({
-        xaxis: {
-            ticks: ''
-        },
-        yaxis: {
-            ticks: ''
-        },
-        margin: {
-            l: 60, b: 40, r: 40, t: 40
-        }
-    }, options);
-};
+        this.trace = [{
+            z: [],
+            ...trace,
+            type: 'heatmap',
+        }];
+    }
 
-export function generateHeatmap(m: Matrix, options?: Partial<PlotlyCharts.Chart>) {
-    const opts : PlotlyCharts.Chart = _.mergeWith({
-        trace: [],
-        layout: {},
-        name: 'no name'
-    }, options);
+    colorScale(palette: Palette = createSequentialPalette()) {
+        const size = palette.size;
+        const colors = _.times(size, i => {
+            const color = palette.get(i);
+            return tuple(i / (size - 1), color.toRGBString());
+        });
 
-    const trace = getHeatmapObject(m, opts.trace[0]);
-    const layout = getHeatmapLayout(opts.layout);
+        this.trace[0].colorscale = colors;
 
-    return new PlotlyCharts.Chart([trace], layout, opts.name);
+        return this;
+    }
+
+    static fromMatrix(m: Matrix) {
+        return new Heatmap({
+            z: m.asArrays(),
+        });
+    }
+
+    static fromArrays(arr: number[][]) {
+        return new Heatmap({
+            z: arr,
+        });
+    }
 }

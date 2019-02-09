@@ -1,28 +1,12 @@
-import * as _ from 'lodash';
-import { Color } from './utils/Color';
-import { Layout, Trace, Chart } from './utils/PlotlyCharts';
-
-export interface HistogramTrace extends Partial<Trace> {
-    type: 'histogram';
-    x: Array<number>;
-    name?: string;
-    opacity?: number;
-    marker?: {
-        color?: string;
-    };
-};
-
-export class Histogram extends Chart {
-    trace: HistogramTrace[];
-    constructor(trace: Partial<HistogramTrace>, layout?: Partial<Layout>) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const _ = require("lodash");
+const PlotlyCharts_1 = require("./utils/PlotlyCharts");
+;
+class Histogram extends PlotlyCharts_1.Chart {
+    constructor(trace, layout) {
         super([], layout);
-
-        this.trace = [{
-            x: [],
-            ...trace,
-            type: 'histogram',
-        }];
-
+        this.trace = [Object.assign({ x: [] }, trace, { type: 'histogram' })];
         // set opinionated layout defaults for line plots
         this.layout = _.merge({
             xaxis: {
@@ -41,20 +25,18 @@ export class Histogram extends Chart {
             },
         }, layout);
     }
-
-    setColor(c: Color) {
+    setColor(c) {
         _.set(this.trace[0], 'marker.color', c.toRGBString());
         return this;
     }
-
-    setOpacity(a: number) {
+    setOpacity(a) {
         this.trace[0].opacity = a;
         return this;
     }
-
-    static fromArray(arr: number[]) {
+    static fromArray(arr) {
         return new Histogram({
             x: arr,
         });
     }
 }
+exports.Histogram = Histogram;
