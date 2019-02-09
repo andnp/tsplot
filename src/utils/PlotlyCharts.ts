@@ -1,18 +1,7 @@
 import * as Plotly from 'plotly.js';
 import * as _ from 'lodash';
 
-export interface Trace_t {
-    type: 'scatter' | 'heatmap';
-    name?: string;
-    mode?: 'lines';
-    z?: Array<Array<number>>;
-    x?: Array<number>;
-    y?: Array<number>;
-    showlegend?: boolean;
-    line?: {
-        color?: string
-    }
-};
+export interface Trace_t { /* stub */ }
 
 export interface Layout_t extends Partial<Plotly.Layout> { };
 
