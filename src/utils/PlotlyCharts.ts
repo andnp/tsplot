@@ -8,7 +8,9 @@ export interface Trace {
     };
 }
 
-export interface Layout extends Partial<Plotly.Layout> { };
+export interface Layout extends Partial<Plotly.Layout> {
+    barmode?: 'overlay';
+};
 
 export class Chart {
     public layout: Partial<Layout>;
