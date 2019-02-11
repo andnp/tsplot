@@ -151,7 +151,7 @@ export class ChartGrid extends Chart {
         });
     }
 
-    fromCharts(charts: Chart[], shape?: [number, number]) {
+    static fromCharts(charts: Chart[], shape?: [number, number]) {
         const traces = arrays.flatMap(charts, fp.prop('trace'));
         return new ChartGrid(traces, charts[0].layout, shape || [charts.length]);
     }

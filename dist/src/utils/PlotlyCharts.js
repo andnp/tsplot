@@ -116,7 +116,7 @@ class ChartGrid extends Chart {
             grid: { rows, columns, pattern: 'independent' },
         });
     }
-    fromCharts(charts, shape) {
+    static fromCharts(charts, shape) {
         const traces = utilities_ts_1.arrays.flatMap(charts, utilities_ts_1.fp.prop('trace'));
         return new ChartGrid(traces, charts[0].layout, shape || [charts.length]);
     }
