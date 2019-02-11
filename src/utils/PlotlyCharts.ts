@@ -1,5 +1,6 @@
 import * as Plotly from 'plotly.js';
 import * as _ from 'lodash';
+import { fp, arrays } from 'utilities-ts';
 
 export interface Trace {
     name?: string;
@@ -10,13 +11,18 @@ export interface Trace {
 
 export interface Layout extends Partial<Plotly.Layout> {
     barmode?: 'overlay';
+    grid?: {
+        rows: number;
+        columns: number;
+        pattern?: 'independent';
+    }
 };
 
 export class Chart {
     public layout: Partial<Layout>;
     public trace: Array<Trace>;
 
-    constructor(trace?: Trace[], layout?: Layout, name?: string) {
+    constructor(trace?: Trace[], layout?: Layout) {
         this.trace = trace || [];
 
         this.layout = _.merge({
@@ -133,4 +139,20 @@ export function combineTraces(plots: Array<Chart>): Chart {
         traces,
         _.merge(plots[0].layout, layout),
     );
+}
+
+export class ChartGrid extends Chart {
+    constructor (trace: Trace[], layout: Layout, shape: [number] | [number, number]) {
+        super(trace, layout);
+        const rows = shape[0];
+        const columns = shape.length === 1 ? 1 : shape[1];
+        this.editLayout({
+            grid: { rows, columns, pattern: 'independent' },
+        });
+    }
+
+    fromCharts(charts: Chart[], shape?: [number, number]) {
+        const traces = arrays.flatMap(charts, fp.prop('trace'));
+        return new ChartGrid(traces, charts[0].layout, shape || [charts.length]);
+    }
 }

@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
+const utilities_ts_1 = require("utilities-ts");
 ;
 class Chart {
-    constructor(trace, layout, name) {
+    constructor(trace, layout) {
         this.trace = trace || [];
         this.layout = _.merge({
             xaxis: {
@@ -106,3 +107,18 @@ function combineTraces(plots) {
     return new Chart(traces, _.merge(plots[0].layout, layout));
 }
 exports.combineTraces = combineTraces;
+class ChartGrid extends Chart {
+    constructor(trace, layout, shape) {
+        super(trace, layout);
+        const rows = shape[0];
+        const columns = shape.length === 1 ? 1 : shape[1];
+        this.editLayout({
+            grid: { rows, columns, pattern: 'independent' },
+        });
+    }
+    fromCharts(charts, shape) {
+        const traces = utilities_ts_1.arrays.flatMap(charts, utilities_ts_1.fp.prop('trace'));
+        return new ChartGrid(traces, charts[0].layout, shape || [charts.length]);
+    }
+}
+exports.ChartGrid = ChartGrid;
